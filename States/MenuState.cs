@@ -22,6 +22,7 @@ namespace prrprr_projekt_oop.States
                 "Exit"
             };
             _selectedIndex = 0;
+            BGcolor = Color.Black;
         }
 
         public override void LoadContent()
@@ -46,6 +47,7 @@ namespace prrprr_projekt_oop.States
                     game1.Exit();
             }
 
+            base.Update(gameTime);
             kstateOld = kstateNew;
             starting = false;
         }

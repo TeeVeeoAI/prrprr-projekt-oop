@@ -18,6 +18,7 @@ namespace prrprr_projekt_oop.States
         protected SpriteFont font;
         protected Texture2D pixel;
         protected bool starting = true;
+        protected Color BGcolor;
 
         public State(Game1 game, GraphicsDevice graphics, ContentManager content)
         {
@@ -26,11 +27,19 @@ namespace prrprr_projekt_oop.States
             contentManager = content;
             pixel = new Texture2D(graphicsDevice, 1, 1);
             pixel.SetData(new[] { Color.White });
-            game1.SetBGColor(Color.Black);
         }
 
-        public abstract void LoadContent();
-        public abstract void Update(GameTime gameTime);
+        public virtual void LoadContent()
+        {
+            game1.SetBGColor(BGcolor);
+        }
+        public virtual void Update(GameTime gameTime)
+        {
+            if (kstateNew.IsKeyDown(Keys.Escape) && kstateOld.IsKeyUp(Keys.Escape))
+            {
+                game1.Exit();
+            }
+        }
         public abstract void Draw(GameTime gameTime, SpriteBatch spriteBatch);
     }
 }

@@ -26,3 +26,4 @@ C:\Github\prrprr-projekt-oop\obj\Debug\net8.0-windows\refint\prrprr-projekt-oop.
 C:\Github\prrprr-projekt-oop\obj\Debug\net8.0-windows\prrprr-projekt-oop.pdb
 C:\Github\prrprr-projekt-oop\obj\Debug\net8.0-windows\prrprr-projekt-oop.genruntimeconfig.cache
 C:\Github\prrprr-projekt-oop\obj\Debug\net8.0-windows\ref\prrprr-projekt-oop.dll
+C:\Github\prrprr-projekt-oop\obj\Debug\net8.0-windows\prrprr-projekt-oop.sourcelink.json

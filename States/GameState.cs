@@ -18,7 +18,7 @@ namespace prrprr_projekt_oop.States
             : base(game1, graphicsDevice, content)
         {
             score = new Score();
-            game1.SetBGColor(new Color(30,25,40));
+            BGcolor = new Color(30, 25, 40);
         }
 
         public override void LoadContent()
@@ -35,6 +35,7 @@ namespace prrprr_projekt_oop.States
                 score.PickName(kstateNew, kstateOld);
             }
 
+            base.Update(gameTime);
             kstateOld = kstateNew;
             starting = false;
         }
