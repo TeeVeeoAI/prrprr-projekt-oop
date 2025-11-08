@@ -6,9 +6,9 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace prrprr_projekt_oop.Classes
+namespace prrprr_projekt_oop.Entities
 {
-    public class BaseClass
+    public class BaseEntity
     {
         protected Vector2 position;
         protected Vector2 velocity;
@@ -25,7 +25,7 @@ namespace prrprr_projekt_oop.Classes
             get => position;
         }
 
-        public BaseClass(Vector2 position, Vector2 velocity, Vector2 heightAndWidth, Texture2D texture)
+        public BaseEntity(Vector2 position, Vector2 velocity, Vector2 heightAndWidth, Texture2D texture)
         {
             this.position = position;
             this.velocity = velocity;
@@ -34,13 +34,6 @@ namespace prrprr_projekt_oop.Classes
         }
 
         public virtual void Update(GameTime gameTime) { }
-
-        public virtual void Update(GameTime gameTime, KeyboardState kstateNew, KeyboardState kstateOld)
-        {
-            Update(gameTime);
-            
-            hitbox.Location = position.ToPoint();
-        }
 
         public virtual void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {

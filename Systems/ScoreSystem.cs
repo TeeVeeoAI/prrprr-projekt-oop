@@ -4,33 +4,33 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Input;
 
-namespace prrprr_projekt_oop.score
+namespace prrprr_projekt_oop.Systems
 {
-    public class Score
+    public class ScoreSystem
     {
-        private int scoreValue;
+        private int value;
         private string name;
         private bool pickedName;
-        public int ScoreValue { get => scoreValue; }
+        public int Value { get => value; }
         public string Name { get => name; }
         public bool PickedName { get => pickedName; }
 
-        public Score()
+        public ScoreSystem()
         {
-            this.scoreValue = 0;
+            this.value = 0;
             this.name = "";
             this.pickedName = false;
         }
 
-        public void PickName(KeyboardState kstateNew, KeyboardState kstateOld) //Om jag vill ha leaderboard senare.
+        public void PickName() //Om jag vill ha leaderboard senare.
         {
-            if (kstateNew.IsKeyDown(Keys.Enter) && kstateOld.IsKeyUp(Keys.Enter))
+            if (InputSystem.IsKeyPressed(Keys.Enter) && name.Length > 0)
             {
                 pickedName = true;
                 return;
             }
 
-            var newKeys = kstateNew.GetPressedKeys().Except(kstateOld.GetPressedKeys());
+            var newKeys = InputSystem.GetPressedKeys().Except(InputSystem.OldState.GetPressedKeys());
 
             foreach (var key in newKeys)
             {
@@ -46,11 +46,11 @@ namespace prrprr_projekt_oop.score
         }
         public void IncreaseScore(int amount)
         {
-            scoreValue += amount;
+            value += amount;
         }
         public void DecreaseScore(int amount)
         {
-            scoreValue -= amount;
+            value -= amount;
         }
     }
 }

@@ -6,22 +6,23 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using prrprr_projekt_oop.Systems;
 
 namespace prrprr_projekt_oop.States
 {
     public class MenuState : State
     {
-        private List<string> _menuItems;
-        private int _selectedIndex;
+        private List<string> menuItems;
+        private int selectedIndex;
         public MenuState(Game1 game, GraphicsDevice graphicsDevice, ContentManager content)
             : base(game, graphicsDevice, content)
         {
-            _menuItems = new List<string>()
+            menuItems = new List<string>()
             {
                 "Start Game",
                 "Exit"
             };
-            _selectedIndex = 0;
+            selectedIndex = 0;
             BGcolor = Color.Black;
         }
 
@@ -32,23 +33,21 @@ namespace prrprr_projekt_oop.States
 
         public override void Update(GameTime gameTime)
         {
-            kstateNew = Keyboard.GetState();
+            base.Update(gameTime);
 
-            if (kstateNew.IsKeyDown(Keys.Down) && kstateOld.IsKeyUp(Keys.Down))
-                _selectedIndex = (_selectedIndex + 1) % _menuItems.Count;
-            if (kstateNew.IsKeyDown(Keys.Up) && kstateOld.IsKeyUp(Keys.Up))
-                _selectedIndex = (_selectedIndex - 1 + _menuItems.Count) % _menuItems.Count;
+            if (InputSystem.IsKeyPressed(Keys.Down))
+                selectedIndex = (selectedIndex + 1) % menuItems.Count;
+            if (InputSystem.IsKeyPressed(Keys.Up))
+                selectedIndex = (selectedIndex - 1 + menuItems.Count) % menuItems.Count;
 
-            if (kstateNew.IsKeyDown(Keys.Enter) && kstateOld.IsKeyUp(Keys.Enter) && !starting)
+            if (InputSystem.IsKeyPressed(Keys.Enter) && !starting)
             {
-                if (_menuItems[_selectedIndex] == "Start Game")
+                if (menuItems[selectedIndex] == "Start Game")
                     game1.ChangeState(new GameState(game1, graphicsDevice, contentManager));
-                else if (_menuItems[_selectedIndex] == "Exit")
+                else if (menuItems[selectedIndex] == "Exit")
                     game1.Exit();
             }
 
-            base.Update(gameTime);
-            kstateOld = kstateNew;
             starting = false;
         }
 
@@ -74,24 +73,24 @@ namespace prrprr_projekt_oop.States
                 ),
                 Color.White
             );
-            for (int i = 0; i < _menuItems.Count; i++)
+            for (int i = 0; i < menuItems.Count; i++)
             {
-                var color = (i == _selectedIndex) ? Color.Green : Color.White;
+                var color = (i == selectedIndex) ? Color.Green : Color.White;
                 spriteBatch.Draw(
                     pixel,
                     new Rectangle(
-                        (int)(Game1.ScreenSize.X / 2 - font.MeasureString(_menuItems[i]).X / 2 - 10),
+                        (int)(Game1.ScreenSize.X / 2 - font.MeasureString(menuItems[i]).X / 2 - 10),
                         (int)Game1.ScreenSize.Y / 2 - 90 + font.LineSpacing * 2 + i * font.LineSpacing * 2 - 10,
-                        (int)font.MeasureString(_menuItems[i]).X + 20,
+                        (int)font.MeasureString(menuItems[i]).X + 20,
                         (int)font.LineSpacing * 2
                     ),
                     new Color(color.R / 2, color.G / 2, color.B / 2, (byte)20)
                 );
                 spriteBatch.DrawString(
                     font,
-                    _menuItems[i],
+                    menuItems[i],
                     new Vector2(
-                        Game1.ScreenSize.X / 2 - font.MeasureString(_menuItems[i]).X / 2,
+                        Game1.ScreenSize.X / 2 - font.MeasureString(menuItems[i]).X / 2,
                         Game1.ScreenSize.Y / 2 - 90 + font.LineSpacing * 2 + i * font.LineSpacing * 2
                     ),
                     Color.WhiteSmoke

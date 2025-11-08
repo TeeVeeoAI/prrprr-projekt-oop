@@ -6,19 +6,25 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using prrprr_projekt_oop.score;
+using prrprr_projekt_oop.Entities;
+using prrprr_projekt_oop.Systems;
 
 namespace prrprr_projekt_oop.States
 {
     public class GameState : State
     {
-        private Score score;
+        private ScoreSystem score;
+        private Player player;
 
         public GameState(Game1 game1, GraphicsDevice graphicsDevice, ContentManager content)
             : base(game1, graphicsDevice, content)
         {
-            score = new Score();
+            score = new ScoreSystem();
             BGcolor = new Color(30, 25, 40);
+            player = new Player(
+                new Vector2(50, 50),
+                pixel
+            );
         }
 
         public override void LoadContent()
@@ -28,24 +34,49 @@ namespace prrprr_projekt_oop.States
 
         public override void Update(GameTime gameTime)
         {
-            kstateNew = Keyboard.GetState();
+            base.Update(gameTime);
 
             if (!score.PickedName && !starting)
             {
-                score.PickName(kstateNew, kstateOld);
+                score.PickName();
+            }
+            else
+            {
+                player.Update(gameTime);
             }
 
-            base.Update(gameTime);
-            kstateOld = kstateNew;
             starting = false;
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             spriteBatch.Begin();
+            DrawGame(gameTime, spriteBatch);
+
+            DrawUi(spriteBatch);
 
             DrawPickName(spriteBatch);
             spriteBatch.End();
+        }
+        
+        public void DrawGame(GameTime gameTime, SpriteBatch spriteBatch)
+        {
+            player.Draw(gameTime, spriteBatch);
+        }
+
+        public void DrawUi(SpriteBatch spriteBatch)
+        {
+            DrawScore(spriteBatch);
+        }
+
+        public void DrawScore(SpriteBatch spriteBatch)
+        {
+            spriteBatch.DrawString(
+                font,
+                "Score: " + score.Value,
+                new Vector2(10, 10),
+                Color.White
+            );
         }
 
         public void DrawPickName(SpriteBatch spriteBatch)

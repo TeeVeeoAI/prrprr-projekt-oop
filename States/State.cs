@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using prrprr_projekt_oop.Systems;
 
 namespace prrprr_projekt_oop.States
 {
@@ -14,7 +15,6 @@ namespace prrprr_projekt_oop.States
         protected Game1 game1;
         protected GraphicsDevice graphicsDevice;
         protected ContentManager contentManager;
-        protected KeyboardState kstateNew, kstateOld;
         protected SpriteFont font;
         protected Texture2D pixel;
         protected bool starting = true;
@@ -27,6 +27,7 @@ namespace prrprr_projekt_oop.States
             contentManager = content;
             pixel = new Texture2D(graphicsDevice, 1, 1);
             pixel.SetData(new[] { Color.White });
+            InputSystem.Initialize();
         }
 
         public virtual void LoadContent()
@@ -35,7 +36,8 @@ namespace prrprr_projekt_oop.States
         }
         public virtual void Update(GameTime gameTime)
         {
-            if (kstateNew.IsKeyDown(Keys.Escape) && kstateOld.IsKeyUp(Keys.Escape))
+            InputSystem.Update();
+            if (InputSystem.IsKeyPressed(Keys.Escape))
             {
                 game1.Exit();
             }
