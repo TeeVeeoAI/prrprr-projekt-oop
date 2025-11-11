@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
@@ -14,7 +15,7 @@ namespace prrprr_projekt_oop.Entities
         protected Keys[] keys;
 
         public Player(Vector2 heightAndWidth, Texture2D texture)
-        : base(Game1.ScreenSize / 2 - heightAndWidth, new Vector2(5, 5), heightAndWidth, texture, 5, Color.SeaGreen)
+        : base(Game1.ScreenSize / 2 - heightAndWidth, new Vector2(10, 10), heightAndWidth, texture, 5, Color.SeaGreen)
         {
             keys = new Keys[]
             {
@@ -82,10 +83,17 @@ namespace prrprr_projekt_oop.Entities
                     color = Color.Red;
                     break;
                 default:
-                    color = Color.Gray;
+                    color = ColorBlink(Color.Gray, Color.DarkRed, gameTime, 3f);
                     break;
             }
             base.Draw(gameTime, spriteBatch);
+        }
+
+        public Color ColorBlink(Color color1, Color color2, GameTime gameTime, float blinkSpeed = 2f)
+        {
+            float time = (float)gameTime.TotalGameTime.TotalSeconds * blinkSpeed;
+            float t = (float)(Math.Sin(time * Math.PI * 2) + 1) / 2;
+            return Color.Lerp(color1, color2, t);
         }
 
         public void ChangeColor(Color newColor)

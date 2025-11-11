@@ -17,6 +17,7 @@ namespace prrprr_projekt_oop.States
         private Player player;
         private List<BaseEnemy> enemies;
         private Texture2D healthBar;
+        private bool gameOver = false;
 
         public GameState(Game1 game1, GraphicsDevice graphicsDevice, ContentManager content)
             : base(game1, graphicsDevice, content)
@@ -42,6 +43,9 @@ namespace prrprr_projekt_oop.States
         {
             base.Update(gameTime);
 
+            if (gameOver)
+                return;
+
             if (!score.PickedName && !starting)
             {
                 score.PickName();
@@ -59,6 +63,10 @@ namespace prrprr_projekt_oop.States
                 if (newEnemy != null)
                 {
                     enemies.Add(newEnemy);
+                }
+                if (player.IsDead())
+                {
+                    gameOver = true;
                 }
 
             }
