@@ -11,13 +11,11 @@ namespace prrprr_projekt_oop.Entities
 {
     public class Player : BaseEntity
     {
-
         protected Keys[] keys;
 
         public Player(Vector2 heightAndWidth, Texture2D texture)
-        : base(Game1.ScreenSize / 2 - heightAndWidth, new Vector2(5, 5), heightAndWidth, texture)
+        : base(Game1.ScreenSize / 2 - heightAndWidth, new Vector2(5, 5), heightAndWidth, texture, 5, Color.SeaGreen)
         {
-            color = Color.SeaGreen;
             keys = new Keys[]
             {
                 Keys.W,
@@ -47,7 +45,7 @@ namespace prrprr_projekt_oop.Entities
             {
                 position.X += velocity.X;
             }
-            if (InputSystem.IsKeyDown(keys[(int)PlayerKeys.Shoot]))
+            if (InputSystem.IsKeyPressed(keys[(int)PlayerKeys.Shoot]))
             {
                 Shoot(gameTime);
             }
@@ -66,7 +64,43 @@ namespace prrprr_projekt_oop.Entities
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
+            switch (HP)
+            {
+                case 5:
+                    color = Color.SeaGreen;
+                    break;
+                case 4:
+                    color = Color.YellowGreen;
+                    break;
+                case 3:
+                    color = Color.Yellow;
+                    break;
+                case 2:
+                    color = Color.Orange;
+                    break;
+                case 1:
+                    color = Color.Red;
+                    break;
+                default:
+                    color = Color.Gray;
+                    break;
+            }
             base.Draw(gameTime, spriteBatch);
+        }
+
+        public void ChangeColor(Color newColor)
+        {
+            color = newColor;
+        }
+
+        public void TakeDamage(int damage)
+        {
+            hp -= damage;
+        }
+
+        public bool IsDead()
+        {
+            return hp <= 0;
         }
     }
     

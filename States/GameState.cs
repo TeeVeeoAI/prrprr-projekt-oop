@@ -15,6 +15,8 @@ namespace prrprr_projekt_oop.States
     {
         private ScoreSystem score;
         private Player player;
+        private List<BaseEnemy> enemies;
+        private Texture2D healthBar;
 
         public GameState(Game1 game1, GraphicsDevice graphicsDevice, ContentManager content)
             : base(game1, graphicsDevice, content)
@@ -25,12 +27,16 @@ namespace prrprr_projekt_oop.States
                 new Vector2(50, 50),
                 pixel
             );
+            enemies = new List<BaseEnemy>();
         }
 
         public override void LoadContent()
         {
             font = contentManager.Load<SpriteFont>("Fonts/MainFont");
+            healthBar = contentManager.Load<Texture2D>("Images/HealthBarV3");
         }
+
+        #region Update
 
         public override void Update(GameTime gameTime)
         {
@@ -43,10 +49,53 @@ namespace prrprr_projekt_oop.States
             else
             {
                 player.Update(gameTime);
+                for (int i = 0; i < enemies.Count; i++)
+                {
+                    var e = enemies[i];
+                    e.Update(gameTime);
+                }
+                CollisionCheck();
+                var newEnemy = EnemySpawnerSystem.SpawnEnemy(pixel);
+                if (newEnemy != null)
+                {
+                    enemies.Add(newEnemy);
+                }
+
             }
 
             starting = false;
         }
+
+        public void ReamoveDeadEnemy(BaseEnemy e, ref int index)
+        {
+            if (e.IsDead())
+            {
+                if (e.DamageByPlayer)
+                {
+                    score.IncreaseScore(100);
+                }
+                enemies.RemoveAt(index);
+                index--;
+            }
+        }
+        
+        public void CollisionCheck()
+        {
+            for (int i = 0; i < enemies.Count; i++)
+            {
+                var e = enemies[i];
+                if (CollisionSystem.CheckPlayerEnemyCollision(player, e))
+                {
+                    player.TakeDamage(1);
+                    e.Kill(true);
+                    ReamoveDeadEnemy(e, ref i);
+                }
+            }
+        }
+
+        #endregion
+
+        #region Draw
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
@@ -62,19 +111,49 @@ namespace prrprr_projekt_oop.States
         public void DrawGame(GameTime gameTime, SpriteBatch spriteBatch)
         {
             player.Draw(gameTime, spriteBatch);
+            foreach (BaseEnemy e in enemies)
+            {
+                e.Draw(gameTime, spriteBatch);
+            }
         }
 
         public void DrawUi(SpriteBatch spriteBatch)
         {
+            DrawPlayerInfo(spriteBatch);
+            DrawHealthBar(spriteBatch);
             DrawScore(spriteBatch);
+        }
+
+        public void DrawPlayerInfo(SpriteBatch spriteBatch)
+        {
+            spriteBatch.DrawString(
+                font,
+                $"{score.Name} | ",
+                new Vector2(10, 10),
+                Color.White
+            );
+        }
+
+        public void DrawHealthBar(SpriteBatch spriteBatch)
+        {
+            int barHeight = healthBar.Height / 6;
+            int barWidth = healthBar.Width;
+            int sourceY = (5 - (player.HP >= 0 ? player.HP : 0)) * barHeight; // Each bar is 50 pixels tall
+            
+            spriteBatch.Draw(
+                healthBar,
+                new Rectangle((int)(Game1.ScreenSize.X - barWidth), (int)(Game1.ScreenSize.Y - barHeight), barWidth, barHeight),
+                new Rectangle(0, sourceY, barWidth, barHeight),
+                Color.White
+            );
         }
 
         public void DrawScore(SpriteBatch spriteBatch)
         {
             spriteBatch.DrawString(
                 font,
-                "Score: " + score.Value,
-                new Vector2(10, 10),
+                $"{score.Value}p",
+                new Vector2(10 + font.MeasureString($"{score.Name} | ").X, 10),
                 Color.White
             );
         }
@@ -119,5 +198,6 @@ namespace prrprr_projekt_oop.States
                 );
             }
         }
+        #endregion
     }
 }

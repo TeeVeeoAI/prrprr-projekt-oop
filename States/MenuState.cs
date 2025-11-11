@@ -75,7 +75,7 @@ namespace prrprr_projekt_oop.States
             );
             for (int i = 0; i < menuItems.Count; i++)
             {
-                var color = (i == selectedIndex) ? Color.Green : Color.White;
+                Color color = (i == selectedIndex) ? Color.Green : Color.White;
                 spriteBatch.Draw(
                     pixel,
                     new Rectangle(

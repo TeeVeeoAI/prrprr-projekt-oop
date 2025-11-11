@@ -27,3 +27,6 @@ C:\Github\prrprr-projekt-oop\obj\Debug\net8.0-windows\prrprr-projekt-oop.pdb
 C:\Github\prrprr-projekt-oop\obj\Debug\net8.0-windows\prrprr-projekt-oop.genruntimeconfig.cache
 C:\Github\prrprr-projekt-oop\obj\Debug\net8.0-windows\ref\prrprr-projekt-oop.dll
 C:\Github\prrprr-projekt-oop\obj\Debug\net8.0-windows\prrprr-projekt-oop.sourcelink.json
+C:\Github\prrprr-projekt-oop\bin\Debug\net8.0-windows\Content\Images\HealthBar.xnb
+C:\Github\prrprr-projekt-oop\bin\Debug\net8.0-windows\Content\Images\HealthBarV2.xnb
+C:\Github\prrprr-projekt-oop\bin\Debug\net8.0-windows\Content\Images\HealthBarV3.xnb

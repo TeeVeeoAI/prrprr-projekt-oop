@@ -8,13 +8,14 @@ using Microsoft.Xna.Framework.Input;
 
 namespace prrprr_projekt_oop.Entities
 {
-    public class BaseEntity
+    public abstract class BaseEntity
     {
         protected Vector2 position;
         protected Vector2 velocity;
         protected Rectangle hitbox;
         protected Texture2D texture;
         protected Color color;
+        protected int hp;
 
         public Rectangle Hitbox
         {
@@ -24,13 +25,19 @@ namespace prrprr_projekt_oop.Entities
         {
             get => position;
         }
+        public int HP
+        {
+            get => hp;
+        }
 
-        public BaseEntity(Vector2 position, Vector2 velocity, Vector2 heightAndWidth, Texture2D texture)
+        public BaseEntity(Vector2 position, Vector2 velocity, Vector2 heightAndWidth, Texture2D texture, int hp, Color color)
         {
             this.position = position;
             this.velocity = velocity;
             this.hitbox = new Rectangle((int)position.X, (int)position.Y, (int)heightAndWidth.X, (int)heightAndWidth.Y);
             this.texture = texture;
+            this.hp = hp;
+            this.color = color;
         }
 
         public virtual void Update(GameTime gameTime) { }
