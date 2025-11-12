@@ -43,8 +43,13 @@ namespace prrprr_projekt_oop.States
         {
             base.Update(gameTime);
 
-            if (gameOver)
+            if (gameOver){
+                if (InputSystem.IsKeyPressed(Keys.Enter) && !starting)
+                {
+                    game1.ChangeState(new MenuState(game1, graphicsDevice, contentManager));
+                }
                 return;
+            }
 
             if (!score.PickedName && !starting)
             {
@@ -108,11 +113,17 @@ namespace prrprr_projekt_oop.States
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             spriteBatch.Begin();
+
             DrawGame(gameTime, spriteBatch);
 
             DrawUi(spriteBatch);
 
-            DrawPickName(spriteBatch);
+            if (!score.PickedName)
+                DrawPickName(spriteBatch);
+
+            if (gameOver)
+                DrawGameOver(spriteBatch);
+            
             spriteBatch.End();
         }
         
@@ -136,22 +147,8 @@ namespace prrprr_projekt_oop.States
         {
             spriteBatch.DrawString(
                 font,
-                $"{score.Name} | ",
+                $"{score.OnScreenName} | ",
                 new Vector2(10, 10),
-                Color.White
-            );
-        }
-
-        public void DrawHealthBar(SpriteBatch spriteBatch)
-        {
-            int barHeight = healthBar.Height / 6;
-            int barWidth = healthBar.Width;
-            int sourceY = (5 - (player.HP >= 0 ? player.HP : 0)) * barHeight; // Each bar is 50 pixels tall
-            
-            spriteBatch.Draw(
-                healthBar,
-                new Rectangle((int)(Game1.ScreenSize.X - barWidth), (int)(Game1.ScreenSize.Y - barHeight), barWidth, barHeight),
-                new Rectangle(0, sourceY, barWidth, barHeight),
                 Color.White
             );
         }
@@ -161,50 +158,83 @@ namespace prrprr_projekt_oop.States
             spriteBatch.DrawString(
                 font,
                 $"{score.Value}p",
-                new Vector2(10 + font.MeasureString($"{score.Name} | ").X, 10),
+                new Vector2(10 + font.MeasureString($"{score.OnScreenName} | ").X, 10),
+                Color.White
+            );
+        }
+
+        public void DrawHealthBar(SpriteBatch spriteBatch)
+        {
+            int barHeight = healthBar.Height / 6;
+            int barWidth = healthBar.Width;
+            int sourceY = (5 - (player.HP >= 0 ? player.HP : 0)) * barHeight; // Each bar is 50 pixels tall
+
+            spriteBatch.Draw(
+                healthBar,
+                new Rectangle((int)(Game1.ScreenSize.X - barWidth), (int)(Game1.ScreenSize.Y - barHeight), barWidth, barHeight),
+                new Rectangle(0, sourceY, barWidth, barHeight),
+                Color.White
+            );
+        }
+        
+        public void DrawGameOver(SpriteBatch spriteBatch)
+        {
+            spriteBatch.DrawString(
+                font,
+                "Game Over!",
+                new Vector2(
+                    Game1.ScreenSize.X / 2 - font.MeasureString("Game Over!").X / 2,
+                    Game1.ScreenSize.Y / 2 - font.LineSpacing
+                ),
+                Color.White
+            );
+            spriteBatch.DrawString(
+                font,
+                "Press ENTER to return to Menu",
+                new Vector2(
+                    Game1.ScreenSize.X / 2 - font.MeasureString("Press ENTER to return to Menu").X / 2,
+                    Game1.ScreenSize.Y / 2 + font.LineSpacing
+                ),
                 Color.White
             );
         }
 
         public void DrawPickName(SpriteBatch spriteBatch)
         {
-            if (!score.PickedName)
-            {
-                spriteBatch.Draw(
-                    pixel,
-                    new Rectangle(0, 0, (int)Game1.ScreenSize.X, (int)Game1.ScreenSize.Y),
-                    new Color(10, 10, 10)
-                );
+            spriteBatch.Draw(
+                pixel,
+                new Rectangle(0, 0, (int)Game1.ScreenSize.X, (int)Game1.ScreenSize.Y),
+                new Color(10, 10, 10)
+            );
 
-                string displayText = score.Name.Length > 0 ? score.Name : "_";
-                spriteBatch.DrawString(
-                    font,
-                    "Enter your name:",
-                    new Vector2(
-                        Game1.ScreenSize.X / 2 - font.MeasureString("Enter your name:").X / 2,
-                        Game1.ScreenSize.Y / 2 - font.LineSpacing * 3
-                    ),
-                    Color.White
-                );
-                spriteBatch.DrawString(
-                    font,
-                    displayText,
-                    new Vector2(
-                        Game1.ScreenSize.X / 2 - font.MeasureString(displayText).X / 2,
-                        Game1.ScreenSize.Y / 2 - font.LineSpacing
-                    ),
-                    Color.White
-                );
-                spriteBatch.DrawString(
-                    font,
-                    "Space to confirm",
-                    new Vector2(
-                        Game1.ScreenSize.X / 2 - font.MeasureString("Space to confirm").X / 2,
-                        Game1.ScreenSize.Y / 2 - font.LineSpacing * -2
-                    ),
-                    Color.White
-                );
-            }
+            string displayText = score.Name.Length > 0 ? score.Name : "_";
+            spriteBatch.DrawString(
+                font,
+                "Enter your name:",
+                new Vector2(
+                    Game1.ScreenSize.X / 2 - font.MeasureString("Enter your name:").X / 2,
+                    Game1.ScreenSize.Y / 2 - font.LineSpacing * 3
+                ),
+                Color.White
+            );
+            spriteBatch.DrawString(
+                font,
+                displayText,
+                new Vector2(
+                    Game1.ScreenSize.X / 2 - font.MeasureString(displayText).X / 2,
+                    Game1.ScreenSize.Y / 2 - font.LineSpacing
+                ),
+                Color.White
+            );
+            spriteBatch.DrawString(
+                font,
+                "ENTER to confirm",
+                new Vector2(
+                    Game1.ScreenSize.X / 2 - font.MeasureString("ENTER to confirm").X / 2,
+                    Game1.ScreenSize.Y / 2 - font.LineSpacing * -2
+                ),
+                Color.White
+            );
         }
         #endregion
     }

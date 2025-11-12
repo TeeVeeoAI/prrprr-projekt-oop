@@ -10,23 +10,27 @@ namespace prrprr_projekt_oop.Systems
     {
         private int value;
         private string name;
+        private string onScreenName;
         private bool pickedName;
         public int Value { get => value; }
         public string Name { get => name; }
+        public string OnScreenName { get => onScreenName; }
         public bool PickedName { get => pickedName; }
 
         public ScoreSystem()
         {
             this.value = 0;
             this.name = "";
+            this.onScreenName = "";
             this.pickedName = false;
         }
 
-        public void PickName() //Om jag vill ha leaderboard senare.
+        public void PickName() //If i want a leaderboard later
         {
             if (InputSystem.IsKeyPressed(Keys.Enter) && name.Length > 0)
             {
                 pickedName = true;
+                onScreenName = name.Length > 10 ? $"{name[0]}{name[1]}{name[2]}{name[3]}{name[4]}{name[5]}{name[6]}{name[7]}{name[8]}{name[9]}...": name;
                 return;
             }
 

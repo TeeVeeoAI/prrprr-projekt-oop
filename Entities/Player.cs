@@ -46,9 +46,9 @@ namespace prrprr_projekt_oop.Entities
             {
                 position.X += velocity.X;
             }
-            if (InputSystem.IsKeyPressed(keys[(int)PlayerKeys.Shoot]))
+            if (InputSystem.IsKeyPressed(keys[(int)PlayerKeys.UseWeapon]))
             {
-                Shoot(gameTime);
+                UseWeapon(gameTime);
             }
 
             // Keep player within screen bounds
@@ -58,7 +58,7 @@ namespace prrprr_projekt_oop.Entities
             hitbox.Location = position.ToPoint();
         }
 
-        public void Shoot(GameTime gameTime)
+        public void UseWeapon(GameTime gameTime)
         {
             
         }
@@ -118,7 +118,7 @@ namespace prrprr_projekt_oop.Entities
         Left,
         Down,
         Right,
-        Shoot
+        UseWeapon
     }
 }
 
