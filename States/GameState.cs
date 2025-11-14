@@ -26,6 +26,7 @@ namespace prrprr_projekt_oop.States
             BGcolor = new Color(30, 25, 40);
             player = new Player(
                 new Vector2(50, 50),
+                pixel,
                 pixel
             );
             enemies = new List<BaseEnemy>();
@@ -35,6 +36,7 @@ namespace prrprr_projekt_oop.States
         {
             font = contentManager.Load<SpriteFont>("Fonts/MainFont");
             healthBar = contentManager.Load<Texture2D>("Images/HealthBarV3");
+            
         }
 
         #region Update
@@ -43,7 +45,8 @@ namespace prrprr_projekt_oop.States
         {
             base.Update(gameTime);
 
-            if (gameOver){
+            if (gameOver)
+            {
                 if (InputSystem.IsKeyPressed(Keys.Enter) && !starting)
                 {
                     game1.ChangeState(new MenuState(game1, graphicsDevice, contentManager));
@@ -69,6 +72,33 @@ namespace prrprr_projekt_oop.States
                 {
                     enemies.Add(newEnemy);
                 }
+
+                
+
+                for (int i = 0; i < player.Projectiles.Count; i++)
+                {
+                    var p = player.Projectiles[i];
+                    p.Update(gameTime);
+                    // check collision with enemies
+                    for (int j = 0; j < enemies.Count; j++)
+                    {
+                        var e = enemies[j];
+                        if (p.Owner == e) continue; // don't hit owner
+                        if (p.Hitbox.Intersects(e.Hitbox))
+                        {
+                            e.TakeDamage(p.Damage, true);
+                            p.Expire();
+                            ReamoveDeadEnemy(e, ref j);
+                        }
+                    }
+
+                    if (p.IsExpired)
+                    {
+                        player.Projectiles.RemoveAt(i);
+                        i--;
+                    }
+                }
+
                 if (player.IsDead())
                 {
                     gameOver = true;
@@ -91,7 +121,7 @@ namespace prrprr_projekt_oop.States
                 index--;
             }
         }
-        
+
         public void CollisionCheck()
         {
             for (int i = 0; i < enemies.Count; i++)
@@ -123,16 +153,21 @@ namespace prrprr_projekt_oop.States
 
             if (gameOver)
                 DrawGameOver(spriteBatch);
-            
+
             spriteBatch.End();
         }
-        
+
         public void DrawGame(GameTime gameTime, SpriteBatch spriteBatch)
         {
             player.Draw(gameTime, spriteBatch);
             foreach (BaseEnemy e in enemies)
             {
                 e.Draw(gameTime, spriteBatch);
+            }
+            // draw projectiles
+            foreach (var p in player.Projectiles)
+            {
+                p.Draw(gameTime, spriteBatch);
             }
         }
 
@@ -176,7 +211,7 @@ namespace prrprr_projekt_oop.States
                 Color.White
             );
         }
-        
+
         public void DrawGameOver(SpriteBatch spriteBatch)
         {
             spriteBatch.DrawString(

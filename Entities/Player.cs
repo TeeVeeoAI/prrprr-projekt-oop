@@ -7,14 +7,23 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using prrprr_projekt_oop.Systems;
+using prrprr_projekt_oop.Entities.Weapons;
+using prrprr_projekt_oop.Entities.Projectiles;
 
 namespace prrprr_projekt_oop.Entities
 {
     public class Player : BaseEntity
     {
-        protected Keys[] keys;
+        private Keys[] keys;
+        private Weapon weapon;
+        private List<Projectile> projectiles = new List<Projectile>();
+        private Texture2D projectileTexture;
 
-        public Player(Vector2 heightAndWidth, Texture2D texture)
+        public List<Projectile> Projectiles {
+            get => projectiles;
+        }
+
+        public Player(Vector2 heightAndWidth, Texture2D texture, Texture2D projectileTexture)
         : base(Game1.ScreenSize / 2 - heightAndWidth, new Vector2(10, 10), heightAndWidth, texture, 5, Color.SeaGreen)
         {
             keys = new Keys[]
@@ -22,9 +31,12 @@ namespace prrprr_projekt_oop.Entities
                 Keys.W,
                 Keys.A,
                 Keys.S,
-                Keys.D,
-                Keys.V
+                Keys.D
             };
+
+            this.projectileTexture = projectileTexture;
+
+            weapon = new Weapon(0.12f, 1, Vector2.Zero, 12f);
         }
 
         public override void Update(GameTime gameTime)
@@ -46,7 +58,7 @@ namespace prrprr_projekt_oop.Entities
             {
                 position.X += velocity.X;
             }
-            if (InputSystem.IsKeyPressed(keys[(int)PlayerKeys.UseWeapon]))
+            if (InputSystem.IsLeftDown())
             {
                 UseWeapon(gameTime);
             }
@@ -58,9 +70,23 @@ namespace prrprr_projekt_oop.Entities
             hitbox.Location = position.ToPoint();
         }
 
+        public Projectile TryShoot(GameTime gameTime, Vector2 direction, Texture2D projTexture)
+        {
+            if (weapon == null) return null;
+            var spawn = position + new Vector2(hitbox.Width / 2, hitbox.Height / 2);
+            return weapon.TryShoot(gameTime, spawn, direction, projTexture, this);
+        }
+
         public void UseWeapon(GameTime gameTime)
         {
-            
+            Vector2 mousePos = InputSystem.GetMousePosition();
+            Vector2 direction = mousePos - (position + new Vector2(hitbox.Width / 2, hitbox.Height / 2));
+            var projectile = TryShoot(gameTime, direction, projectileTexture);
+            if (projectile != null)
+            {
+                projectiles.Add(projectile);
+            }
+
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
@@ -111,14 +137,13 @@ namespace prrprr_projekt_oop.Entities
             return hp <= 0;
         }
     }
-    
+
     public enum PlayerKeys
     {
         Up = 0,
         Left,
         Down,
-        Right,
-        UseWeapon
+        Right
     }
 }
 

@@ -10,26 +10,56 @@ namespace prrprr_projekt_oop.Systems
     {
         private static KeyboardState kstateNew = Keyboard.GetState();
         private static KeyboardState kstateOld = kstateNew;
+        private static MouseState mstateNew = Mouse.GetState();
+        private static MouseState mstateOld = mstateNew;
 
         public static void Initialize()
         {
             kstateNew = Keyboard.GetState();
+            mstateNew = Mouse.GetState();
             kstateOld = kstateNew;
+            mstateOld = mstateNew;
         }
 
         public static void Update()
         {
             kstateOld = kstateNew;
+            mstateOld = mstateNew;
             kstateNew = Keyboard.GetState();
+            mstateNew = Mouse.GetState();
         }
 
         public static KeyboardState NewState => kstateNew;
         public static KeyboardState OldState => kstateOld;
+        public static MouseState NewMouseState => mstateNew;
+        public static MouseState OldMouseState => mstateOld;
+
+        public static bool IsLeftPressed()
+        {
+            return mstateNew.LeftButton == ButtonState.Pressed && mstateOld.LeftButton == ButtonState.Released;
+        }
+
+        public static bool IsLeftReleased()
+        {
+            return mstateNew.LeftButton == ButtonState.Released && mstateOld.LeftButton == ButtonState.Pressed;
+        }
+
+        public static bool IsLeftDown()
+        {
+            return mstateNew.LeftButton == ButtonState.Pressed;
+        }
+
+        public static Microsoft.Xna.Framework.Vector2 GetMousePosition()
+        {
+            return new Microsoft.Xna.Framework.Vector2(mstateNew.X, mstateNew.Y);
+        }
 
         public static bool IsKeyPressed(Keys key)
         {
             return kstateNew.IsKeyDown(key) && kstateOld.IsKeyUp(key);
         }
+
+        
 
         public static bool IsKeyReleased(Keys key)
         {
