@@ -30,3 +30,5 @@ C:\Github\prrprr-projekt-oop\obj\Debug\net8.0-windows\prrprr-projekt-oop.sourcel
 C:\Github\prrprr-projekt-oop\bin\Debug\net8.0-windows\Content\Images\HealthBar.xnb
 C:\Github\prrprr-projekt-oop\bin\Debug\net8.0-windows\Content\Images\HealthBarV2.xnb
 C:\Github\prrprr-projekt-oop\bin\Debug\net8.0-windows\Content\Images\HealthBarV3.xnb
+C:\GitHub\prrprr-projekt-oop\bin\Debug\net8.0-windows\Content\Images\Player.xnb
+C:\GitHub\prrprr-projekt-oop\bin\Debug\net8.0-windows\Content\Images\Ship_4.xnb

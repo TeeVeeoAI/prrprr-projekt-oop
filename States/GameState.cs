@@ -17,6 +17,7 @@ namespace prrprr_projekt_oop.States
         private Player player;
         private List<BaseEnemy> enemies;
         private Texture2D healthBar;
+        private Texture2D playerTexture;
         private bool gameOver = false;
 
         public GameState(Game1 game1, GraphicsDevice graphicsDevice, ContentManager content)
@@ -24,19 +25,20 @@ namespace prrprr_projekt_oop.States
         {
             score = new ScoreSystem();
             BGcolor = new Color(30, 25, 40);
-            player = new Player(
-                new Vector2(50, 50),
-                pixel,
-                pixel
-            );
-            enemies = new List<BaseEnemy>();
         }
 
         public override void LoadContent()
         {
             font = contentManager.Load<SpriteFont>("Fonts/MainFont");
             healthBar = contentManager.Load<Texture2D>("Images/HealthBarV3");
-            
+            playerTexture = contentManager.Load<Texture2D>("Images/Ship_4");
+
+            player = new Player(
+                new Vector2(50, 50),
+                playerTexture,
+                pixel
+            );
+            enemies = new List<BaseEnemy>();
         }
 
         #region Update

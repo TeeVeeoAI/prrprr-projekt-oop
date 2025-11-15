@@ -18,13 +18,14 @@ namespace prrprr_projekt_oop.Entities
         private Weapon weapon;
         private List<Projectile> projectiles = new List<Projectile>();
         private Texture2D projectileTexture;
+        private float rotation = 0f;
 
         public List<Projectile> Projectiles {
             get => projectiles;
         }
 
         public Player(Vector2 heightAndWidth, Texture2D texture, Texture2D projectileTexture)
-        : base(Game1.ScreenSize / 2 - heightAndWidth, 400f, heightAndWidth, texture, 5, Color.SeaGreen)
+        : base(Game1.ScreenSize / 2 - heightAndWidth, 400f, heightAndWidth, texture, 5, Color.White)
         {
             keys = new Keys[]
             {
@@ -43,6 +44,11 @@ namespace prrprr_projekt_oop.Entities
         {
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
+            // Calculate rotation to face the mouse
+            Vector2 mousePos = InputSystem.GetMousePosition();
+            Vector2 playerCenter = position + new Vector2(hitbox.Width / 2, hitbox.Height / 2);
+            Vector2 dirToMouse = mousePos - playerCenter;
+            rotation = (float)Math.Atan2(dirToMouse.Y, dirToMouse.X) + (float)Math.PI / 2f;
 
             if (InputSystem.IsKeyDown(keys[(int)PlayerKeys.Up]))
             {
@@ -93,28 +99,21 @@ namespace prrprr_projekt_oop.Entities
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            switch (HP)
-            {
-                case 5:
-                    color = Color.SeaGreen;
-                    break;
-                case 4:
-                    color = Color.YellowGreen;
-                    break;
-                case 3:
-                    color = Color.Yellow;
-                    break;
-                case 2:
-                    color = Color.Orange;
-                    break;
-                case 1:
-                    color = Color.Red;
-                    break;
-                default:
-                    color = ColorBlink(Color.Gray, Color.DarkRed, gameTime, 3f);
-                    break;
-            }
-            base.Draw(gameTime, spriteBatch);
+            if (hp <= 0)
+                color = ColorBlink(Color.Red, Color.White, gameTime, 2f);
+            // Draw the player sprite with rotation centered on the sprite's center
+            Vector2 origin = new Vector2(texture.Width / 2f, texture.Height / 2f);
+            spriteBatch.Draw(
+                texture,
+                new Vector2(hitbox.X + hitbox.Width/2, hitbox.Y + hitbox.Height/2),
+                null,
+                color,
+                rotation,
+                origin,
+                hitbox.Size.ToVector2() / texture.Bounds.Size.ToVector2(),
+                SpriteEffects.None,
+                0f
+            );
         }
 
         public Color ColorBlink(Color color1, Color color2, GameTime gameTime, float blinkSpeed = 2f)
