@@ -42,17 +42,7 @@ namespace prrprr_projekt_oop.Entities
                 position.Y += speed * deltaTime;
             }
 
-            OutOfBoundsCheck();
-
             hitbox.Location = position.ToPoint();
-        }
-
-        public void OutOfBoundsCheck()
-        {
-            if (position.Y > Game1.ScreenSize.Y)
-            {
-                hp = 0; // Mark for removal
-            }
         }
 
         public void TakeDamage(int damage, bool byPlayer = false)
