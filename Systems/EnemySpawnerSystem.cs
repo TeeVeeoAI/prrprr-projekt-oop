@@ -14,6 +14,7 @@ namespace prrprr_projekt_oop.Systems
         public static Stopwatch spawnTimer = new Stopwatch();
         public static int spawnInterval = 2000; // in milliseconds
         private static Random rand = new Random();
+        public static float ShooterEnemyWeight = 0.3f;
 
         public static Vector2 PickSpawnPos()
         {
@@ -48,7 +49,7 @@ namespace prrprr_projekt_oop.Systems
         }
 
         // SpawnEnemy now accepts an optional Player reference and optional speed.
-        public static BaseEnemy SpawnEnemy(Texture2D texture, Entities.Player player = null)
+        public static BaseEnemy SpawnEnemy(Texture2D texture, Texture2D projectileTexture = null, Entities.Player player = null)
         {
             if (!spawnTimer.IsRunning)
             {
@@ -57,7 +58,16 @@ namespace prrprr_projekt_oop.Systems
             if (spawnTimer.ElapsedMilliseconds > spawnInterval)
             {
                 spawnTimer.Restart();
-                return new BaseEnemy(texture, player);
+                
+                // Randomly choose between ClassicEnemy and ShooterEnemy based on weight
+                if (rand.NextDouble() < ShooterEnemyWeight && projectileTexture != null)
+                {
+                    return new ShooterEnemy(texture, projectileTexture, player);
+                }
+                else
+                {
+                    return new ClassicEnemy(texture, player);
+                }
             }
             return null;
         }

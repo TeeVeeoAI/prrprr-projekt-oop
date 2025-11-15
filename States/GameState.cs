@@ -67,10 +67,33 @@ namespace prrprr_projekt_oop.States
                 {
                     var e = enemies[i];
                     e.Update(gameTime);
+                    
+                    // Handle ShooterEnemy projectiles
+                    if (e is ShooterEnemy shooterEnemy)
+                    {
+                        for (int j = 0; j < shooterEnemy.Projectiles.Count; j++)
+                        {
+                            var p = shooterEnemy.Projectiles[j];
+                            p.Update(gameTime);
+                            
+                            // Check collision with player
+                            if (p.Hitbox.Intersects(player.Hitbox))
+                            {
+                                player.TakeDamage(p.Damage);
+                                p.Expire();
+                            }
+                            
+                            if (p.IsExpired)
+                            {
+                                shooterEnemy.Projectiles.RemoveAt(j);
+                                j--;
+                            }
+                        }
+                    }
                 }
                 CollisionCheck();
                 
-                var newEnemy = EnemySpawnerSystem.SpawnEnemy(pixel, player);
+                var newEnemy = EnemySpawnerSystem.SpawnEnemy(pixel, pixel, player);
                 if (newEnemy != null)
                 {
                     enemies.Add(newEnemy);
@@ -133,7 +156,7 @@ namespace prrprr_projekt_oop.States
                 if (CollisionSystem.CheckPlayerEnemyCollision(player, e))
                 {
                     player.TakeDamage(1);
-                    e.Kill(true);
+                    e.Kill(); //does not count as killed by player
                     ReamoveDeadEnemy(e, ref i);
                 }
             }
@@ -166,6 +189,15 @@ namespace prrprr_projekt_oop.States
             foreach (BaseEnemy e in enemies)
             {
                 e.Draw(gameTime, spriteBatch);
+                
+                // Draw ShooterEnemy projectiles
+                if (e is ShooterEnemy shooterEnemy)
+                {
+                    foreach (var p in shooterEnemy.Projectiles)
+                    {
+                        p.Draw(gameTime, spriteBatch);
+                    }
+                }
             }
             // draw projectiles
             foreach (var p in player.Projectiles)

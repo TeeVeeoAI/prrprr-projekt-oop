@@ -37,7 +37,7 @@ namespace prrprr_projekt_oop.Entities
 
             this.projectileTexture = projectileTexture;
 
-            weapon = new Weapon(0.12f, 1, Vector2.Zero, 600f);
+            weapon = new Rifle();
         }
 
         public override void Update(GameTime gameTime)
