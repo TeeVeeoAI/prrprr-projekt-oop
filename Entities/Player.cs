@@ -19,6 +19,8 @@ namespace prrprr_projekt_oop.Entities
         private List<Projectile> projectiles = new List<Projectile>();
         private Texture2D projectileTexture;
         private float rotation = 0f;
+        private float invincibilityTimer = 0f;
+        private const float invincibilityDuration = 1f;
 
         public List<Projectile> Projectiles {
             get => projectiles;
@@ -44,7 +46,11 @@ namespace prrprr_projekt_oop.Entities
         {
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            // Calculate rotation to face the mouse
+            if (invincibilityTimer > 0)
+            {
+                invincibilityTimer -= deltaTime;
+            }
+
             Vector2 mousePos = InputSystem.GetMousePosition();
             Vector2 playerCenter = position + new Vector2(hitbox.Width / 2, hitbox.Height / 2);
             Vector2 dirToMouse = mousePos - playerCenter;
@@ -101,6 +107,9 @@ namespace prrprr_projekt_oop.Entities
         {
             if (hp <= 0)
                 color = ColorBlink(Color.Red, Color.White, gameTime, 2f);
+            else if (IsInvincible())
+                color = ColorBlink(Color.Red, Color.White, gameTime, 4f);
+            
             // Draw the player sprite with rotation centered on the sprite's center
             Vector2 origin = new Vector2(texture.Width / 2f, texture.Height / 2f);
             spriteBatch.Draw(
@@ -114,6 +123,7 @@ namespace prrprr_projekt_oop.Entities
                 SpriteEffects.None,
                 0f
             );
+            color = Color.White;
         }
 
         public Color ColorBlink(Color color1, Color color2, GameTime gameTime, float blinkSpeed = 2f)
@@ -136,6 +146,16 @@ namespace prrprr_projekt_oop.Entities
         public bool IsDead()
         {
             return hp <= 0;
+        }
+
+        public bool IsInvincible()
+        {
+            return invincibilityTimer > 0f;
+        }
+
+        public void ApplyInvincibility()
+        {
+            invincibilityTimer = invincibilityDuration;
         }
     }
 

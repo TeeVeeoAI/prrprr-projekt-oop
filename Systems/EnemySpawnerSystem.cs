@@ -15,6 +15,7 @@ namespace prrprr_projekt_oop.Systems
         public static int spawnInterval = 2000; // in milliseconds
         private static Random rand = new Random();
         public static float ShooterEnemyWeight = 0.3f;
+        public static float BuffEnemyWeight = 0.1f;
 
         public static Vector2 PickSpawnPos()
         {
@@ -48,7 +49,6 @@ namespace prrprr_projekt_oop.Systems
             return new Vector2(x, y);
         }
 
-        // SpawnEnemy now accepts an optional Player reference and optional speed.
         public static BaseEnemy SpawnEnemy(Texture2D texture, Texture2D projectileTexture = null, Entities.Player player = null)
         {
             if (!spawnTimer.IsRunning)
@@ -58,15 +58,48 @@ namespace prrprr_projekt_oop.Systems
             if (spawnTimer.ElapsedMilliseconds > spawnInterval)
             {
                 spawnTimer.Restart();
-                
-                // Randomly choose between ClassicEnemy and ShooterEnemy based on weight
-                if (rand.NextDouble() < ShooterEnemyWeight && projectileTexture != null)
-                {
-                    return new ShooterEnemy(texture, projectileTexture, player);
-                }
-                else
+
+                // Build dictionary of candidate enemy types with their weights
+                var candidates = new Dictionary<string, float>();
+
+                // ClassicEnemy base weight
+                candidates["classic"] = 1f;
+
+                // ShooterEnemy only if are is a projectile texture
+                if (projectileTexture != null)
+                    candidates["shooter"] = ShooterEnemyWeight;
+
+                // BuffEnemy
+                candidates["buff"] = BuffEnemyWeight;
+
+                // Sum weights
+                float total = candidates.Values.Sum();
+                if (total <= 0f)
                 {
                     return new ClassicEnemy(texture, player);
+                }
+
+                double r = rand.NextDouble() * total;
+                float cumulative = 0f;
+                string chosen = "classic";
+                foreach (var kv in candidates)
+                {
+                    cumulative += kv.Value;
+                    if (r <= cumulative)
+                    {
+                        chosen = kv.Key;
+                        break;
+                    }
+                }
+
+                switch (chosen)
+                {
+                    case "shooter":
+                        return new ShooterEnemy(texture, projectileTexture, player);
+                    case "buff":
+                        return new BuffEnemy(texture, player);
+                    default:
+                        return new ClassicEnemy(texture, player);
                 }
             }
             return null;

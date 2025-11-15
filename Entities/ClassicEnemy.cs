@@ -9,8 +9,8 @@ namespace prrprr_projekt_oop.Entities
     {
         private Player targetPlayer;
 
-        public ClassicEnemy(Texture2D texture, Player player = null)
-            : base(EnemySpawnerSystem.PickSpawnPos(), new Vector2(50, 50), texture, Color.Violet, 3)
+        public ClassicEnemy(Texture2D texture, Player player = null, int damage = 1)
+            : base(EnemySpawnerSystem.PickSpawnPos(), new Vector2(50, 50), texture, Color.Violet, damage, 3)
         {
             this.targetPlayer = player;
         }

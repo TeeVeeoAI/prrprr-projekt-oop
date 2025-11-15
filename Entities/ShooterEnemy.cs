@@ -21,7 +21,7 @@ namespace prrprr_projekt_oop.Entities
         }
 
         public ShooterEnemy(Texture2D texture, Texture2D projectileTexture, Player player = null, float speed = 150f)
-            : base(EnemySpawnerSystem.PickSpawnPos(), new Vector2(50, 50), texture, Color.Cyan, 3, speed)
+            : base(EnemySpawnerSystem.PickSpawnPos(), new Vector2(50, 50), texture, Color.Cyan, 1, 3, speed)
         {
             this.targetPlayer = player;
             this.projectileTexture = projectileTexture;
@@ -53,11 +53,6 @@ namespace prrprr_projekt_oop.Entities
             }
 
             hitbox.Location = position.ToPoint();
-        }
-
-        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
-        {
-            base.Draw(gameTime, spriteBatch);
         }
     }
 }

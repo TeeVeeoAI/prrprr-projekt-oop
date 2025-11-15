@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using prrprr_projekt_oop.Entities;
@@ -18,6 +19,7 @@ namespace prrprr_projekt_oop.States
         private List<BaseEnemy> enemies;
         private Texture2D healthBar;
         private Texture2D playerTexture;
+        private SoundEffect invincibilitySound;
         private bool gameOver = false;
 
         public GameState(Game1 game1, GraphicsDevice graphicsDevice, ContentManager content)
@@ -32,6 +34,28 @@ namespace prrprr_projekt_oop.States
             font = contentManager.Load<SpriteFont>("Fonts/MainFont");
             healthBar = contentManager.Load<Texture2D>("Images/HealthBarV3");
             playerTexture = contentManager.Load<Texture2D>("Images/Ship_4");
+
+            // Load invincibility sound if available (silently ignore if missing)
+            try
+            {
+                invincibilitySound = contentManager.Load<SoundEffect>("Sounds/Invincible");
+            }
+            catch
+            {
+                // If asset missing, generate a short placeholder beep (16-bit PCM mono)
+                int sampleRate = 22050;
+                float duration = 0.15f; // seconds
+                int sampleCount = (int)(sampleRate * duration);
+                byte[] soundData = new byte[sampleCount * 2]; // 16-bit samples
+                double freq = 880.0; // A5
+                for (int i = 0; i < sampleCount; i++)
+                {
+                    short sample = (short)(Math.Sin(2.0 * Math.PI * freq * i / sampleRate) * short.MaxValue * 0.25);
+                    soundData[i * 2] = (byte)(sample & 0xFF);
+                    soundData[i * 2 + 1] = (byte)((sample >> 8) & 0xFF);
+                }
+                invincibilitySound = new SoundEffect(soundData, sampleRate, AudioChannels.Mono);
+            }
 
             player = new Player(
                 new Vector2(50, 50),
@@ -155,9 +179,12 @@ namespace prrprr_projekt_oop.States
                 var e = enemies[i];
                 if (CollisionSystem.CheckPlayerEnemyCollision(player, e))
                 {
-                    player.TakeDamage(1);
-                    e.Kill(); //does not count as killed by player
-                    ReamoveDeadEnemy(e, ref i);
+                    if (!player.IsInvincible())
+                    {
+                        player.TakeDamage(e.Damage);
+                        player.ApplyInvincibility();
+                        invincibilitySound?.Play();
+                    }
                 }
             }
         }
