@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using prrprr_projekt_oop.States;
+using prrprr_projekt_oop.Systems;
 
 namespace prrprr_projekt_oop;
 
@@ -18,6 +19,8 @@ public class Game1 : Game
     private static Rectangle enemySpawnArea;
     private string path;
     private Color BGColor;
+    private FpsCounter fpsCounter;
+    private SpriteFont debugFont;
     public static Rectangle EnemySpawnArea { get => enemySpawnArea; }
     public static Vector2 ScreenSize { get => screenSize; }
     public string Path { get => path; }
@@ -28,6 +31,10 @@ public class Game1 : Game
         _graphics = new GraphicsDeviceManager(this);
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
+
+        // Uncapped FPS with vsync
+        IsFixedTimeStep = false;
+        _graphics.SynchronizeWithVerticalRetrace = true;
     }
 
     protected override void Initialize()
@@ -43,6 +50,9 @@ public class Game1 : Game
         ChangeScreenSize(new Vector2(1920, 1080));
         enemySpawnArea = new Rectangle(0, -50, (int)screenSize.X, 50);
         path = GetFromNestedToRoot(Directory.GetCurrentDirectory());
+
+        fpsCounter = new FpsCounter();
+        debugFont = Content.Load<SpriteFont>("Fonts/MainFont");
 
         currentState = new MenuState(this, GraphicsDevice, Content);
         currentState.LoadContent();
@@ -94,6 +104,7 @@ public class Game1 : Game
             nextState = null;
         }
 
+        fpsCounter.Update(gameTime);
         currentState.Update(gameTime);
 
         base.Update(gameTime);
@@ -104,6 +115,10 @@ public class Game1 : Game
         GraphicsDevice.Clear(BGColor);
 
         currentState.Draw(gameTime, _spriteBatch);
+
+        _spriteBatch.Begin();
+        fpsCounter.Draw(_spriteBatch, debugFont, new Vector2(10, screenSize.Y - 40), Color.White);
+        _spriteBatch.End();
 
         base.Draw(gameTime);
     }

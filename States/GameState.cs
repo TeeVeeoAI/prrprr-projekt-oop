@@ -67,7 +67,8 @@ namespace prrprr_projekt_oop.States
                     e.Update(gameTime);
                 }
                 CollisionCheck();
-                var newEnemy = EnemySpawnerSystem.SpawnEnemy(pixel);
+                
+                var newEnemy = EnemySpawnerSystem.SpawnEnemy(pixel, player);
                 if (newEnemy != null)
                 {
                     enemies.Add(newEnemy);

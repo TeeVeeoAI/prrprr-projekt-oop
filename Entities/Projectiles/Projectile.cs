@@ -9,6 +9,7 @@ namespace prrprr_projekt_oop.Entities.Projectiles
         private int damage;
         private BaseEntity owner;
         private bool isExpired;
+        private Vector2 velocity;
         public BaseEntity Owner
         {
             get => owner;
@@ -19,17 +20,19 @@ namespace prrprr_projekt_oop.Entities.Projectiles
         }
 
         public Projectile(Vector2 position, Vector2 velocity, Vector2 size, Texture2D texture, int hp, Color color, int damage, BaseEntity owner = null)
-            : base(position, velocity, size, texture, hp, color)
+        : base(position, velocity.Length(), size, texture, hp, color)
         {
             this.damage = damage;
             this.owner = owner;
+            this.velocity = velocity;
         }
 
-        public int Damage => damage;
+        public int Damage { get => damage; }
 
         public override void Update(GameTime gameTime)
         {
-            position += velocity;
+            float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            position += this.velocity * deltaTime;
 
             hitbox.Location = position.ToPoint();
 

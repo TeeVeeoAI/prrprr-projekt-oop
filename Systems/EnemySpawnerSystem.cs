@@ -13,16 +13,42 @@ namespace prrprr_projekt_oop.Systems
     {
         public static Stopwatch spawnTimer = new Stopwatch();
         public static int spawnInterval = 2000; // in milliseconds
-        public static Rectangle SpawnArea = new Rectangle(0, -100, (int)Game1.ScreenSize.X-100, 100);
+        private static Random rand = new Random();
+
         public static Vector2 PickSpawnPos()
         {
-            Random rand = new Random();
-            int x = rand.Next(SpawnArea.Left, SpawnArea.Right);
-            int y = SpawnArea.Top;
+            int w = (int)Game1.ScreenSize.X;
+            int h = (int)Game1.ScreenSize.Y;
+            int off = 100; // how far off-screen to spawn
+
+            int side = rand.Next(4); // 0=top,1=bottom,2=left,3=right
+            int x = 0, y = 0;
+
+            switch (side)
+            {
+                case 0: // top
+                    x = rand.Next(-off, w + off);
+                    y = -off;
+                    break;
+                case 1: // bottom
+                    x = rand.Next(-off, w + off);
+                    y = h + off;
+                    break;
+                case 2: // left
+                    x = -off;
+                    y = rand.Next(-off, h + off);
+                    break;
+                default: // right
+                    x = w + off;
+                    y = rand.Next(-off, h + off);
+                    break;
+            }
+
             return new Vector2(x, y);
         }
 
-        public static BaseEnemy SpawnEnemy(Texture2D texture)
+        // SpawnEnemy now accepts an optional Player reference and optional speed.
+        public static BaseEnemy SpawnEnemy(Texture2D texture, Entities.Player player = null)
         {
             if (!spawnTimer.IsRunning)
             {
@@ -31,7 +57,7 @@ namespace prrprr_projekt_oop.Systems
             if (spawnTimer.ElapsedMilliseconds > spawnInterval)
             {
                 spawnTimer.Restart();
-                return new BaseEnemy(texture);
+                return new BaseEnemy(texture, player);
             }
             return null;
         }

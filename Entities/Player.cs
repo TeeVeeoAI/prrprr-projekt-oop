@@ -24,7 +24,7 @@ namespace prrprr_projekt_oop.Entities
         }
 
         public Player(Vector2 heightAndWidth, Texture2D texture, Texture2D projectileTexture)
-        : base(Game1.ScreenSize / 2 - heightAndWidth, new Vector2(10, 10), heightAndWidth, texture, 5, Color.SeaGreen)
+        : base(Game1.ScreenSize / 2 - heightAndWidth, 400f, heightAndWidth, texture, 5, Color.SeaGreen)
         {
             keys = new Keys[]
             {
@@ -36,27 +36,29 @@ namespace prrprr_projekt_oop.Entities
 
             this.projectileTexture = projectileTexture;
 
-            weapon = new Weapon(0.12f, 1, Vector2.Zero, 12f);
+            weapon = new Weapon(0.12f, 1, Vector2.Zero, 600f);
         }
 
         public override void Update(GameTime gameTime)
         {
+            float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
 
             if (InputSystem.IsKeyDown(keys[(int)PlayerKeys.Up]))
             {
-                position.Y -= velocity.Y;
+                position.Y -= speed * deltaTime;
             }
             if (InputSystem.IsKeyDown(keys[(int)PlayerKeys.Down]))
             {
-                position.Y += velocity.Y;
+                position.Y += speed * deltaTime;
             }
             if (InputSystem.IsKeyDown(keys[(int)PlayerKeys.Left]))
             {
-                position.X -= velocity.X;
+                position.X -= speed * deltaTime;
             }
             if (InputSystem.IsKeyDown(keys[(int)PlayerKeys.Right]))
             {
-                position.X += velocity.X;
+                position.X += speed * deltaTime;
             }
             if (InputSystem.IsLeftDown())
             {

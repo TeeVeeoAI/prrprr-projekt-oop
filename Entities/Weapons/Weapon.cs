@@ -13,11 +13,11 @@ namespace prrprr_projekt_oop.Entities.Weapons
         private int damage;
         private Vector2 muzzleOffset;
         private float projectileSpeed;
-        public int Damage => damage;
-        public float FireRateSeconds => fireRateSeconds;
-        public float ProjectileSpeed => (int)projectileSpeed;
+        public int Damage { get => damage; }
+        public float FireRateSeconds { get => fireRateSeconds; }
+        public float ProjectileSpeed { get => projectileSpeed; }
 
-        public Weapon(float fireRateSeconds = 0.25f, int damage = 1, Vector2? muzzleOffset = null, float projectileSpeed = 8f)
+        public Weapon(float fireRateSeconds = 0.25f, int damage = 1, Vector2? muzzleOffset = null, float projectileSpeed = 300f)
         {
             this.fireRateSeconds = fireRateSeconds;
             this.damage = damage;

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
 namespace prrprr_projekt_oop.Systems
@@ -29,10 +30,10 @@ namespace prrprr_projekt_oop.Systems
             mstateNew = Mouse.GetState();
         }
 
-        public static KeyboardState NewState => kstateNew;
-        public static KeyboardState OldState => kstateOld;
-        public static MouseState NewMouseState => mstateNew;
-        public static MouseState OldMouseState => mstateOld;
+        public static KeyboardState NewState { get => kstateNew; }
+        public static KeyboardState OldState { get => kstateOld; }
+        public static MouseState NewMouseState { get => mstateNew; }
+        public static MouseState OldMouseState { get => mstateOld; }
 
         public static bool IsLeftPressed()
         {
@@ -49,9 +50,9 @@ namespace prrprr_projekt_oop.Systems
             return mstateNew.LeftButton == ButtonState.Pressed;
         }
 
-        public static Microsoft.Xna.Framework.Vector2 GetMousePosition()
+        public static Vector2 GetMousePosition()
         {
-            return new Microsoft.Xna.Framework.Vector2(mstateNew.X, mstateNew.Y);
+            return new Vector2(mstateNew.X, mstateNew.Y);
         }
 
         public static bool IsKeyPressed(Keys key)
