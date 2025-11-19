@@ -32,9 +32,8 @@ public class Game1 : Game
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
 
-        // Uncapped FPS with vsync
-        IsFixedTimeStep = false;
-        _graphics.SynchronizeWithVerticalRetrace = true;
+        IsFixedTimeStep = false; // uncapped FPS
+        _graphics.SynchronizeWithVerticalRetrace = true; //V-Sync
     }
 
     protected override void Initialize()
