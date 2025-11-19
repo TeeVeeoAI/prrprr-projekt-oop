@@ -13,6 +13,7 @@ namespace prrprr_projekt_oop.Entities.Weapons
         protected int damage;
         protected Vector2 muzzleOffset;
         protected float projectileSpeed;
+        protected Color projectileColor;
 
         public int Damage { get => damage; }
         public float FireRateSeconds { get => fireRateSeconds; }
@@ -28,6 +29,10 @@ namespace prrprr_projekt_oop.Entities.Weapons
 
         public virtual Projectile TryShoot(GameTime gameTime, Vector2 origin, Vector2 direction, Texture2D projTexture, BaseEntity owner = null)
         {
+            if (projectileColor == Color.Transparent)
+            {
+                projectileColor = owner != null ? owner.GetType() == typeof(Player) ? Color.Green : Color.Red : Color.White;
+            }
             var now = gameTime.TotalGameTime.TotalSeconds;
             if (now - lastShotTime < fireRateSeconds) return null;
             if (direction == Vector2.Zero) return null;
@@ -40,7 +45,7 @@ namespace prrprr_projekt_oop.Entities.Weapons
 
             Vector2 size = new Vector2(8, 8);
 
-            var p = new Projectile(spawnPos, velocity, size, projTexture, 1, Color.White, damage, owner);
+            var p = new Projectile(spawnPos, velocity, size, projTexture, 1, projectileColor, damage, owner);
             return p;
         }
     }

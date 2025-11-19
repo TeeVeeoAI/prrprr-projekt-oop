@@ -17,6 +17,8 @@ namespace prrprr_projekt_oop.States
         private ScoreSystem score;
         private Player player;
         private List<BaseEnemy> enemies;
+        private List<XpPickup> xpPickups;
+        private Texture2D xpTexture;
         private Texture2D healthBar;
         private Texture2D playerTexture;
         private SoundEffect invincibilitySound;
@@ -34,6 +36,7 @@ namespace prrprr_projekt_oop.States
             font = contentManager.Load<SpriteFont>("Fonts/MainFont");
             healthBar = contentManager.Load<Texture2D>("Images/HealthBarV3");
             playerTexture = contentManager.Load<Texture2D>("Images/Ship_4");
+            xpTexture = contentManager.Load<Texture2D>("Images/XP");
 
             // Load invincibility sound if available (silently ignore if missing)
             try
@@ -63,6 +66,7 @@ namespace prrprr_projekt_oop.States
                 pixel
             );
             enemies = new List<BaseEnemy>();
+            xpPickups = new List<XpPickup>();
         }
 
         #region Update
@@ -91,31 +95,7 @@ namespace prrprr_projekt_oop.States
                 {
                     var e = enemies[i];
                     e.Update(gameTime);
-                    
-                    // Handle ShooterEnemy projectiles
-                    if (e is ShooterEnemy shooterEnemy)
-                    {
-                        for (int j = 0; j < shooterEnemy.Projectiles.Count; j++)
-                        {
-                            var p = shooterEnemy.Projectiles[j];
-                            p.Update(gameTime);
-                            
-                            // Check collision with player
-                            if (p.Hitbox.Intersects(player.Hitbox))
-                            {
-                                player.TakeDamage(p.Damage);
-                                p.Expire();
-                            }
-                            
-                            if (p.IsExpired)
-                            {
-                                shooterEnemy.Projectiles.RemoveAt(j);
-                                j--;
-                            }
-                        }
-                    }
                 }
-                CollisionCheck();
                 
                 var newEnemy = EnemySpawnerSystem.SpawnEnemy(pixel, pixel, player);
                 if (newEnemy != null)
@@ -123,7 +103,7 @@ namespace prrprr_projekt_oop.States
                     enemies.Add(newEnemy);
                 }
 
-                
+                CollisionCheck(gameTime);
 
                 for (int i = 0; i < player.Projectiles.Count; i++)
                 {
@@ -149,6 +129,40 @@ namespace prrprr_projekt_oop.States
                     }
                 }
 
+                // Update XP pickups: allow them to be attracted to the player when nearby, then check collection
+                float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
+                Vector2 playerCenter = new Vector2(player.Hitbox.Center.X, player.Hitbox.Center.Y);
+                const float pullRadius = 120f; // when pickup is within this distance, it will be pulled toward player
+                const float pullSpeed = 300f; // pixels per second when pulled
+
+                for (int i = 0; i < xpPickups.Count; i++)
+                {
+                    var xp = xpPickups[i];
+                    xp.Update(gameTime);
+                    if (xp.IsExpired)
+                    {
+                        xpPickups.RemoveAt(i);
+                        i--;
+                        continue;
+                    }
+
+                    // If pickup is within pull radius, move it toward player
+                    float dist = Vector2.Distance(xp.Collider.Pos, playerCenter);
+                    if (dist <= pullRadius)
+                    {
+                        xp.Attract(playerCenter, pullSpeed, dt);
+                    }
+
+                    if (CollisionSystem.CheckPlayerPickupCollision(player, xp.Collider))
+                    {
+                        player.AddXP(xp.XpAmount);
+                        // Optionally increase score slightly for pickup
+                        score.IncreaseScore(xp.XpAmount / 2);
+                        xpPickups.RemoveAt(i);
+                        i--;
+                    }
+                }
+
                 if (player.IsDead())
                 {
                     gameOver = true;
@@ -166,13 +180,21 @@ namespace prrprr_projekt_oop.States
                 if (e.DamageByPlayer)
                 {
                     score.IncreaseScore(100);
+
+                    // Spawn an XP pickup at enemy center
+                    int amount = 10;
+                    if (e is ShooterEnemy) amount = 15;
+                    else if (e is BuffEnemy) amount = 25;
+                    var center = new Vector2(e.Hitbox.Center.X, e.Hitbox.Center.Y);
+                    xpPickups.Add(new XpPickup(center, amount, 12f, xpTexture));
                 }
+
                 enemies.RemoveAt(index);
                 index--;
             }
         }
 
-        public void CollisionCheck()
+        public void CollisionCheck(GameTime gameTime)
         {
             for (int i = 0; i < enemies.Count; i++)
             {
@@ -186,6 +208,30 @@ namespace prrprr_projekt_oop.States
                         invincibilitySound?.Play();
                     }
                 }
+                if (e is ShooterEnemy shooterEnemy)
+                    {
+                        // Check Enemy projectiles
+                        for (int j = 0; j < shooterEnemy.Projectiles.Count; j++)
+                        {
+                            var p = shooterEnemy.Projectiles[j];
+                            p.Update(gameTime);
+                            
+                            // Check collision with player
+                            if (p.Hitbox.Intersects(player.Hitbox))
+                            {
+                                player.TakeDamage(p.Damage);
+                                player.ApplyInvincibility();
+                                invincibilitySound?.Play();
+                                p.Expire();
+                            }
+                            
+                            if (p.IsExpired)
+                            {
+                                shooterEnemy.Projectiles.RemoveAt(j);
+                                j--;
+                            }
+                        }
+                    }
             }
         }
 
@@ -212,6 +258,8 @@ namespace prrprr_projekt_oop.States
 
         public void DrawGame(GameTime gameTime, SpriteBatch spriteBatch)
         {
+            DrawXPickups(gameTime, spriteBatch);
+
             player.Draw(gameTime, spriteBatch);
             foreach (BaseEnemy e in enemies)
             {
@@ -233,11 +281,31 @@ namespace prrprr_projekt_oop.States
             }
         }
 
+        public void DrawXPickups(GameTime gameTime, SpriteBatch spriteBatch)
+        {
+            // Draw XP pickups
+            foreach (var xp in xpPickups)
+            {
+                xp.Draw(gameTime, spriteBatch);
+            }
+        }
+
         public void DrawUi(SpriteBatch spriteBatch)
         {
             DrawPlayerInfo(spriteBatch);
             DrawHealthBar(spriteBatch);
             DrawScore(spriteBatch);
+            DrawXPickupsInfo(spriteBatch);
+        }
+
+        public void DrawXPickupsInfo(SpriteBatch spriteBatch)
+        {
+            spriteBatch.DrawString(
+                font,
+                $"XP: {player.XP}",
+                new Vector2(10, 10 + font.LineSpacing),
+                Color.LightGreen
+            );
         }
 
         public void DrawPlayerInfo(SpriteBatch spriteBatch)

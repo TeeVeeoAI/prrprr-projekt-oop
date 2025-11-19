@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Input;
 using prrprr_projekt_oop.Systems;
 using prrprr_projekt_oop.Entities.Weapons;
 using prrprr_projekt_oop.Entities.Projectiles;
+using prrprr_projekt_oop.Forms;
 
 namespace prrprr_projekt_oop.Entities
 {
@@ -21,6 +22,12 @@ namespace prrprr_projekt_oop.Entities
         private float rotation = 0f;
         private float invincibilityTimer = 0f;
         private const float invincibilityDuration = 1f;
+        private Circle xpPickupCollider;
+
+        public Circle XPPickupCollider
+        {
+            get => xpPickupCollider;
+        }
 
         public List<Projectile> Projectiles {
             get => projectiles;
@@ -38,6 +45,7 @@ namespace prrprr_projekt_oop.Entities
             };
 
             this.projectileTexture = projectileTexture;
+            xpPickupCollider = new Circle(new Vector2(position.X + hitbox.Width / 2, position.Y + hitbox.Height / 2), Math.Max(hitbox.Width, hitbox.Height) * 2f);
 
             weapon = new Rifle();
         }
@@ -81,6 +89,7 @@ namespace prrprr_projekt_oop.Entities
             position.X = MathHelper.Clamp(position.X, 0, Game1.ScreenSize.X - hitbox.Width);
             position.Y = MathHelper.Clamp(position.Y, 0, Game1.ScreenSize.Y - hitbox.Height);
 
+            xpPickupCollider.ChangePos(new Vector2(position.X + hitbox.Width / 2, position.Y + hitbox.Height / 2));
             hitbox.Location = position.ToPoint();
         }
 
@@ -156,6 +165,16 @@ namespace prrprr_projekt_oop.Entities
         public void ApplyInvincibility()
         {
             invincibilityTimer = invincibilityDuration;
+        }
+
+        // Experience (XP)
+        private int xp = 0;
+        public int XP { get => xp; }
+
+        public void AddXP(int amount)
+        {
+            if (amount <= 0) return;
+            xp += amount;
         }
     }
 

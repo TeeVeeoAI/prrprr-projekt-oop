@@ -30,18 +30,24 @@ namespace prrprr_projekt_oop.Forms
             return temp.Length() <= radius;
         }
 
+        public bool ContainsPoint(Vector2 point)
+        {
+            Vector2 temp = new Vector2(point.X - pos.X, point.Y - pos.Y);
+            return temp.Length() <= radius;
+        }
+
 
         // Intersect for just Recatangle
         public bool Intersects(Rectangle rectangle)
         {
 
-            Point[] corners =
-            [
+            Point[] corners = new Point[]
+            {
                 new Point(rectangle.Left, rectangle.Top),
                 new Point(rectangle.Right, rectangle.Top),
                 new Point(rectangle.Right, rectangle.Bottom),
                 new Point(rectangle.Left, rectangle.Bottom)
-            ];
+            };
 
             foreach (Point corner in corners)
             {
