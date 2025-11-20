@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <SourceFile>C:/Github/prrprr-projekt-oop/Content/Images/HealthBarV3.png</SourceFile>
-  <SourceTime>2025-11-11T14:29:02.3495059+01:00</SourceTime>
-  <DestFile>C:/Github/prrprr-projekt-oop/Content/bin/Windows/Content/Images/HealthBarV3.xnb</DestFile>
-  <DestTime>2025-11-20T10:02:49.2972587+01:00</DestTime>
+  <SourceFile>C:/GitHub/prrprr-projekt-oop/Content/Images/HealthBarV3.png</SourceFile>
+  <SourceTime>2025-11-11T20:25:37.7097224+01:00</SourceTime>
+  <DestFile>C:/GitHub/prrprr-projekt-oop/Content/bin/Windows/Content/Images/HealthBarV3.xnb</DestFile>
+  <DestTime>2025-11-20T23:11:40.7405772+01:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2025-06-02T12:31:02+02:00</ImporterTime>
   <Processor>TextureProcessor</Processor>

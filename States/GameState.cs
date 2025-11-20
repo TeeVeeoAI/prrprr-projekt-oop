@@ -131,9 +131,7 @@ namespace prrprr_projekt_oop.States
                 }
 
                 // Update XP pickups: allow them to be attracted to the player when nearby, then check collection
-                Vector2 playerCenter = new Vector2(player.Hitbox.Center.X, player.Hitbox.Center.Y);
-                const float pullRadius = 120f;
-                const float pullSpeed = 300f; // pixels per second when pulled
+                Vector2 playerCenter = new Vector2(player.Hitbox.Center.X, player.Hitbox.Center.Y); // pixels per second when pulled
 
                 for (int i = 0; i < xpPickups.Count; i++)
                 {
@@ -148,16 +146,15 @@ namespace prrprr_projekt_oop.States
 
                     // If pickup is within pull radius, move it toward player
                     float dist = Vector2.Distance(xp.Collider.Pos, playerCenter);
-                    if (dist <= pullRadius)
+                    if (dist <= player.PullRadius)
                     {
-                        xp.Attract(playerCenter, pullSpeed, dt);
+                        xp.Attract(playerCenter, player.PullSpeed, dt);
                     }
 
                     if (CollisionSystem.CheckPlayerPickupCollision(player, xp.Collider))
                     {
                         player.AddXP(xp.XpAmount);
-                        // Optionally increase score slightly for pickup
-                        score.IncreaseScore(xp.XpAmount / 2);
+                        score.IncreaseScore(xp.XpAmount / 4);
                         xpPickups.RemoveAt(i);
                         i--;
                     }
