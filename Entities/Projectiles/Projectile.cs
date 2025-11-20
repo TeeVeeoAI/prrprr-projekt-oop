@@ -9,7 +9,6 @@ namespace prrprr_projekt_oop.Entities.Projectiles
         private int damage;
         private BaseEntity owner;
         private bool isExpired;
-        private Vector2 velocity;
         public BaseEntity Owner
         {
             get => owner;

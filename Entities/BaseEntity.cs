@@ -12,6 +12,8 @@ namespace prrprr_projekt_oop.Entities
     {
         protected Vector2 position;
         protected float speed; // pixels per second
+        protected Vector2 velocity;
+        protected float friction;
         protected Rectangle hitbox;
         protected Texture2D texture;
         protected Color color;
@@ -38,6 +40,8 @@ namespace prrprr_projekt_oop.Entities
             this.texture = texture;
             this.hp = hp;
             this.color = color;
+            this.velocity = Vector2.Zero;
+            this.friction = 0.96f;
         }
 
         public virtual void Update(GameTime gameTime) { }

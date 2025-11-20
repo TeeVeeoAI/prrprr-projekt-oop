@@ -74,6 +74,7 @@ namespace prrprr_projekt_oop.States
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
+            float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             if (gameOver)
             {
@@ -130,9 +131,8 @@ namespace prrprr_projekt_oop.States
                 }
 
                 // Update XP pickups: allow them to be attracted to the player when nearby, then check collection
-                float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
                 Vector2 playerCenter = new Vector2(player.Hitbox.Center.X, player.Hitbox.Center.Y);
-                const float pullRadius = 120f; // when pickup is within this distance, it will be pulled toward player
+                const float pullRadius = 120f;
                 const float pullSpeed = 300f; // pixels per second when pulled
 
                 for (int i = 0; i < xpPickups.Count; i++)

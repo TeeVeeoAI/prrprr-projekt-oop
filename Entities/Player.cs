@@ -23,10 +23,20 @@ namespace prrprr_projekt_oop.Entities
         private float invincibilityTimer = 0f;
         private const float invincibilityDuration = 1f;
         private Circle xpPickupCollider;
+        private float pullRadius = 120f;
+        private float pullSpeed = 300f; // pixels per second when pulled
 
         public Circle XPPickupCollider
         {
             get => xpPickupCollider;
+        }
+
+        public float PullRadius {
+            get => pullRadius;
+        }
+
+        public float PullSpeed {
+            get => pullSpeed;
         }
 
         public List<Projectile> Projectiles {
@@ -64,26 +74,44 @@ namespace prrprr_projekt_oop.Entities
             Vector2 dirToMouse = mousePos - playerCenter;
             rotation = (float)Math.Atan2(dirToMouse.Y, dirToMouse.X) + (float)Math.PI / 2f;
 
+            // Reset velocity to zero and accumulate input directions
+            Vector2 inputDirection = Vector2.Zero;
+            
             if (InputSystem.IsKeyDown(keys[(int)PlayerKeys.Up]))
             {
-                position.Y -= speed * deltaTime;
+                inputDirection.Y -= 1;
             }
             if (InputSystem.IsKeyDown(keys[(int)PlayerKeys.Down]))
             {
-                position.Y += speed * deltaTime;
+                inputDirection.Y += 1;
             }
             if (InputSystem.IsKeyDown(keys[(int)PlayerKeys.Left]))
             {
-                position.X -= speed * deltaTime;
+                inputDirection.X -= 1;
             }
             if (InputSystem.IsKeyDown(keys[(int)PlayerKeys.Right]))
             {
-                position.X += speed * deltaTime;
+                inputDirection.X += 1;
             }
+
+            // Normalize diagonal movement to prevent faster diagonal speed
+            if (inputDirection != Vector2.Zero)
+            {
+                inputDirection.Normalize();
+                velocity = inputDirection * speed * deltaTime;
+            }
+            else
+            {
+                velocity *= friction; // Friction only when no input
+            }
+
             if (InputSystem.IsLeftDown())
             {
                 UseWeapon(gameTime);
             }
+
+            position += velocity;
+
 
             // Keep player within screen bounds
             position.X = MathHelper.Clamp(position.X, 0, Game1.ScreenSize.X - hitbox.Width);
