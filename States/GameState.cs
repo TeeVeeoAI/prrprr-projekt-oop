@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using prrprr_projekt_oop.Entities;
 using prrprr_projekt_oop.Systems;
+using prrprr_projekt_oop.Entities.Projectiles;
 
 namespace prrprr_projekt_oop.States
 {
@@ -94,11 +95,11 @@ namespace prrprr_projekt_oop.States
                 player.Update(gameTime);
                 for (int i = 0; i < enemies.Count; i++)
                 {
-                    var e = enemies[i];
+                    BaseEnemy e = enemies[i];
                     e.Update(gameTime);
                 }
                 
-                var newEnemy = EnemySpawnerSystem.SpawnEnemy(pixel, pixel, player);
+                BaseEnemy newEnemy = EnemySpawnerSystem.SpawnEnemy(pixel, pixel, player);
                 if (newEnemy != null)
                 {
                     enemies.Add(newEnemy);
@@ -108,12 +109,12 @@ namespace prrprr_projekt_oop.States
 
                 for (int i = 0; i < player.Projectiles.Count; i++)
                 {
-                    var p = player.Projectiles[i];
+                    Projectile p = player.Projectiles[i];
                     p.Update(gameTime);
                     // check collision with enemies
                     for (int j = 0; j < enemies.Count; j++)
                     {
-                        var e = enemies[j];
+                        BaseEnemy e = enemies[j];
                         if (p.Owner == e) continue; // don't hit owner
                         if (p.Hitbox.Intersects(e.Hitbox))
                         {
@@ -130,12 +131,11 @@ namespace prrprr_projekt_oop.States
                     }
                 }
 
-                // Update XP pickups: allow them to be attracted to the player when nearby, then check collection
-                Vector2 playerCenter = new Vector2(player.Hitbox.Center.X, player.Hitbox.Center.Y); // pixels per second when pulled
+                Vector2 playerCenter = new Vector2(player.Hitbox.Center.X, player.Hitbox.Center.Y);
 
                 for (int i = 0; i < xpPickups.Count; i++)
                 {
-                    var xp = xpPickups[i];
+                    XpPickup xp = xpPickups[i];
                     xp.Update(gameTime);
                     if (xp.IsExpired)
                     {
@@ -182,7 +182,7 @@ namespace prrprr_projekt_oop.States
                     int amount = 10;
                     if (e is ShooterEnemy) amount = 15;
                     else if (e is BuffEnemy) amount = 25;
-                    var center = new Vector2(e.Hitbox.Center.X, e.Hitbox.Center.Y);
+                    Vector2 center = new Vector2(e.Hitbox.Center.X, e.Hitbox.Center.Y);
                     xpPickups.Add(new XpPickup(center, amount, 12f, xpTexture));
                 }
 
@@ -195,7 +195,7 @@ namespace prrprr_projekt_oop.States
         {
             for (int i = 0; i < enemies.Count; i++)
             {
-                var e = enemies[i];
+                BaseEnemy e = enemies[i];
                 if (CollisionSystem.CheckPlayerEnemyCollision(player, e))
                 {
                     if (!player.IsInvincible())
@@ -210,7 +210,7 @@ namespace prrprr_projekt_oop.States
                         // Check Enemy projectiles
                         for (int j = 0; j < shooterEnemy.Projectiles.Count; j++)
                         {
-                            var p = shooterEnemy.Projectiles[j];
+                            Projectile p = shooterEnemy.Projectiles[j];
                             p.Update(gameTime);
                             
                             // Check collision with player
@@ -265,14 +265,14 @@ namespace prrprr_projekt_oop.States
                 // Draw ShooterEnemy projectiles
                 if (e is ShooterEnemy shooterEnemy)
                 {
-                    foreach (var p in shooterEnemy.Projectiles)
+                    foreach (Projectile p in shooterEnemy.Projectiles)
                     {
                         p.Draw(gameTime, spriteBatch);
                     }
                 }
             }
             // draw projectiles
-            foreach (var p in player.Projectiles)
+            foreach (Projectile p in player.Projectiles)
             {
                 p.Draw(gameTime, spriteBatch);
             }
@@ -281,7 +281,7 @@ namespace prrprr_projekt_oop.States
         public void DrawXPickups(GameTime gameTime, SpriteBatch spriteBatch)
         {
             // Draw XP pickups
-            foreach (var xp in xpPickups)
+            foreach (XpPickup xp in xpPickups)
             {
                 xp.Draw(gameTime, spriteBatch);
             }
@@ -301,6 +301,12 @@ namespace prrprr_projekt_oop.States
                 font,
                 $"XP: {player.XP}",
                 new Vector2(10, 10 + font.LineSpacing),
+                Color.LightGreen
+            );
+            spriteBatch.DrawString(
+                font,
+                $"Level: {player.Level}",
+                new Vector2(10, 10 + font.LineSpacing * 2),
                 Color.LightGreen
             );
         }

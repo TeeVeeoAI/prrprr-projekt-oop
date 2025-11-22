@@ -34,9 +34,9 @@ namespace prrprr_projekt_oop.Systems
                 return;
             }
 
-            var newKeys = InputSystem.GetPressedKeys().Except(InputSystem.OldState.GetPressedKeys());
+            List<Keys> newKeys = InputSystem.GetPressedKeys().Except(InputSystem.OldState.GetPressedKeys()).ToList();
 
-            foreach (var key in newKeys)
+            foreach (Keys key in newKeys)
             {
                 if (key == Keys.Back && name.Length > 0)
                 {

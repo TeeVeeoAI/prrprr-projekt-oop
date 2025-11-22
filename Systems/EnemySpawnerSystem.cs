@@ -60,7 +60,7 @@ namespace prrprr_projekt_oop.Systems
                 spawnTimer.Restart();
 
                 // Build dictionary of candidate enemy types with their weights
-                var candidates = new Dictionary<string, float>();
+                Dictionary<string, float> candidates = new Dictionary<string, float>();
 
                 // ClassicEnemy base weight
                 candidates["classic"] = 1f;
@@ -82,7 +82,7 @@ namespace prrprr_projekt_oop.Systems
                 double r = rand.NextDouble() * total;
                 float cumulative = 0f;
                 string chosen = "classic";
-                foreach (var kv in candidates)
+                foreach (KeyValuePair<string, float> kv in candidates)
                 {
                     cumulative += kv.Value;
                     if (r <= cumulative)

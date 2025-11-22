@@ -45,7 +45,7 @@ namespace prrprr_projekt_oop.Entities
 
                 // Shoot at the player
                 Vector2 shootDir = playerCenter - selfCenter;
-                var projectile = weapon.TryShoot(gameTime, selfCenter, shootDir, projectileTexture, this);
+                Projectile projectile = weapon.TryShoot(gameTime, selfCenter, shootDir, projectileTexture, this);
                 if (projectile != null)
                 {
                     projectiles.Add(projectile);

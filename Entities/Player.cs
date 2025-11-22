@@ -25,7 +25,19 @@ namespace prrprr_projekt_oop.Entities
         private Circle xpPickupCollider;
         private float pullRadius = 120f;
         private float pullSpeed = 300f; // pixels per second when pulled
+        private int xp = 0;
+        private int level = 1;
+        private int xpToNextLevel = 100;
 
+        public int XP 
+        { 
+            get => xp; 
+        }
+
+        public int XPToNextLevel
+        {
+            get => xpToNextLevel;
+        }
         public Circle XPPickupCollider
         {
             get => xpPickupCollider;
@@ -37,6 +49,10 @@ namespace prrprr_projekt_oop.Entities
 
         public float PullSpeed {
             get => pullSpeed;
+        }
+
+        public int Level {
+            get => level;
         }
 
         public List<Projectile> Projectiles {
@@ -67,6 +83,12 @@ namespace prrprr_projekt_oop.Entities
             if (invincibilityTimer > 0)
             {
                 invincibilityTimer -= deltaTime;
+            }
+
+            if (xp >= xpToNextLevel)
+            {
+                xp -= xpToNextLevel;
+                LevelUp();
             }
 
             Vector2 mousePos = InputSystem.GetMousePosition();
@@ -112,7 +134,6 @@ namespace prrprr_projekt_oop.Entities
 
             position += velocity;
 
-
             // Keep player within screen bounds
             position.X = MathHelper.Clamp(position.X, 0, Game1.ScreenSize.X - hitbox.Width);
             position.Y = MathHelper.Clamp(position.Y, 0, Game1.ScreenSize.Y - hitbox.Height);
@@ -121,10 +142,18 @@ namespace prrprr_projekt_oop.Entities
             hitbox.Location = position.ToPoint();
         }
 
+        public void LevelUp()
+        {
+            level++;
+            xpToNextLevel = (int)(xpToNextLevel * 1.5f);
+            speed *= 1.1f;
+            weapon = new Rifle(weapon.FireRateSeconds * 0.9f, weapon.Damage * 2);
+        }
+
         public Projectile TryShoot(GameTime gameTime, Vector2 direction, Texture2D projTexture)
         {
             if (weapon == null) return null;
-            var spawn = position + new Vector2(hitbox.Width / 2, hitbox.Height / 2);
+            Vector2 spawn = position + new Vector2(hitbox.Width / 2, hitbox.Height / 2);
             return weapon.TryShoot(gameTime, spawn, direction, projTexture, this);
         }
 
@@ -132,7 +161,7 @@ namespace prrprr_projekt_oop.Entities
         {
             Vector2 mousePos = InputSystem.GetMousePosition();
             Vector2 direction = mousePos - (position + new Vector2(hitbox.Width / 2, hitbox.Height / 2));
-            var projectile = TryShoot(gameTime, direction, projectileTexture);
+            Projectile projectile = TryShoot(gameTime, direction, projectileTexture);
             if (projectile != null)
             {
                 projectiles.Add(projectile);
@@ -194,10 +223,6 @@ namespace prrprr_projekt_oop.Entities
         {
             invincibilityTimer = invincibilityDuration;
         }
-
-        // Experience (XP)
-        private int xp = 0;
-        public int XP { get => xp; }
 
         public void AddXP(int amount)
         {

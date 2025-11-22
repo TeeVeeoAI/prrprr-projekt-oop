@@ -1,8 +1,1 @@
 Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Size,Build Seconds
-"C:/GitHub/prrprr-projekt-oop/Content/Fonts/MainFont.spritefont","C:/GitHub/prrprr-projekt-oop/Content/bin/Windows/Content/Fonts/MainFont.xnb","FontDescriptionProcessor","SpriteFontContent",2068,21529,0,1977383
-"C:/GitHub/prrprr-projekt-oop/Content/Images/HealthBar.png","C:/GitHub/prrprr-projekt-oop/Content/bin/Windows/Content/Images/HealthBar.xnb","TextureProcessor","Texture2DContent",11654,3932245,0,1122432
-"C:/GitHub/prrprr-projekt-oop/Content/Images/HealthBarV2.png","C:/GitHub/prrprr-projekt-oop/Content/bin/Windows/Content/Images/HealthBarV2.xnb","TextureProcessor","Texture2DContent",51159,3128085,0,0550576
-"C:/GitHub/prrprr-projekt-oop/Content/Images/HealthBarV3.png","C:/GitHub/prrprr-projekt-oop/Content/bin/Windows/Content/Images/HealthBarV3.xnb","TextureProcessor","Texture2DContent",24741,782085,0,0150128
-"C:/GitHub/prrprr-projekt-oop/Content/Images/Player.png","C:/GitHub/prrprr-projekt-oop/Content/bin/Windows/Content/Images/Player.xnb","TextureProcessor","Texture2DContent",3077,262229,0,0096379
-"C:/GitHub/prrprr-projekt-oop/Content/Images/Ship_4.png","C:/GitHub/prrprr-projekt-oop/Content/bin/Windows/Content/Images/Ship_4.xnb","TextureProcessor","Texture2DContent",636,4181,0,0068883
-"C:/GitHub/prrprr-projekt-oop/Content/Images/XP.png","C:/GitHub/prrprr-projekt-oop/Content/bin/Windows/Content/Images/XP.xnb","TextureProcessor","Texture2DContent",534,16469,0,0040241

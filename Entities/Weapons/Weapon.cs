@@ -33,19 +33,19 @@ namespace prrprr_projekt_oop.Entities.Weapons
             {
                 projectileColor = owner != null ? owner.GetType() == typeof(Player) ? Color.Green : Color.Red : Color.White;
             }
-            var now = gameTime.TotalGameTime.TotalSeconds;
+            double now = gameTime.TotalGameTime.TotalSeconds;
             if (now - lastShotTime < fireRateSeconds) return null;
             if (direction == Vector2.Zero) return null;
 
             lastShotTime = now;
 
-            var dir = Vector2.Normalize(direction);
-            var velocity = dir * projectileSpeed;
-            var spawnPos = origin + muzzleOffset;
+            Vector2 dir = Vector2.Normalize(direction);
+            Vector2 velocity = dir * projectileSpeed;
+            Vector2 spawnPos = origin + muzzleOffset;
 
             Vector2 size = new Vector2(8, 8);
 
-            var p = new Projectile(spawnPos, velocity, size, projTexture, 1, projectileColor, damage, owner);
+            Projectile p = new Projectile(spawnPos, velocity, size, projTexture, 1, projectileColor, damage, owner);
             return p;
         }
     }

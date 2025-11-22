@@ -15,7 +15,7 @@ namespace prrprr_projekt_oop.Entities.Weapons
 
         public override Projectile TryShoot(GameTime gameTime, Vector2 origin, Vector2 direction, Texture2D projTexture, BaseEntity owner = null)
         {
-            var now = gameTime.TotalGameTime.TotalSeconds;
+            double now = gameTime.TotalGameTime.TotalSeconds;
             if (now - lastShotTime < fireRateSeconds) return null;
             if (direction == Vector2.Zero) return null;
 
@@ -39,10 +39,10 @@ namespace prrprr_projekt_oop.Entities.Weapons
                     (float)Math.Sin(projectileAngle)
                 );
 
-                var velocity = projectileDir * projectileSpeed;
-                var spawnPos = origin + muzzleOffset;
+                Vector2 velocity = projectileDir * projectileSpeed;
+                Vector2 spawnPos = origin + muzzleOffset;
 
-                var p = new Projectile(spawnPos, velocity, size, projTexture, 1, Color.White, damage, owner);
+                Projectile p = new Projectile(spawnPos, velocity, size, projTexture, 1, Color.White, damage, owner);
 
                 if (firstProjectile == null)
                 {
