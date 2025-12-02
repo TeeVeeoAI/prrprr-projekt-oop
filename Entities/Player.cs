@@ -29,9 +29,9 @@ namespace prrprr_projekt_oop.Entities
         private int level = 1;
         private int xpToNextLevel = 100;
 
-        public int XP 
-        { 
-            get => xp; 
+        public int XP
+        {
+            get => xp;
         }
 
         public int XPToNextLevel
@@ -43,19 +43,23 @@ namespace prrprr_projekt_oop.Entities
             get => xpPickupCollider;
         }
 
-        public float PullRadius {
+        public float PullRadius
+        {
             get => pullRadius;
         }
 
-        public float PullSpeed {
+        public float PullSpeed
+        {
             get => pullSpeed;
         }
 
-        public int Level {
+        public int Level
+        {
             get => level;
         }
 
-        public List<Projectile> Projectiles {
+        public List<Projectile> Projectiles
+        {
             get => projectiles;
         }
 
@@ -98,7 +102,7 @@ namespace prrprr_projekt_oop.Entities
 
             // Reset velocity to zero and accumulate input directions
             Vector2 inputDirection = Vector2.Zero;
-            
+
             if (InputSystem.IsKeyDown(keys[(int)PlayerKeys.Up]))
             {
                 inputDirection.Y -= 1;
@@ -175,12 +179,12 @@ namespace prrprr_projekt_oop.Entities
                 color = ColorBlink(Color.Red, Color.White, gameTime, 2f);
             else if (IsInvincible())
                 color = ColorBlink(Color.Red, Color.White, gameTime, 4f);
-            
+
             // Draw the player sprite with rotation centered on the sprite's center
             Vector2 origin = new Vector2(texture.Width / 2f, texture.Height / 2f);
             spriteBatch.Draw(
                 texture,
-                new Vector2(hitbox.X + hitbox.Width/2, hitbox.Y + hitbox.Height/2),
+                new Vector2(hitbox.X + hitbox.Width / 2, hitbox.Y + hitbox.Height / 2),
                 null,
                 color,
                 rotation,
