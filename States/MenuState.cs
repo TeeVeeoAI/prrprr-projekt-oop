@@ -20,6 +20,7 @@ namespace prrprr_projekt_oop.States
             menuItems = new List<string>()
             {
                 "Start Game",
+                "Leader Board",
                 "Exit"
             };
             selectedIndex = 0;
@@ -44,6 +45,8 @@ namespace prrprr_projekt_oop.States
             {
                 if (menuItems[selectedIndex] == "Start Game")
                     game1.ChangeState(new GameState(game1, graphicsDevice, contentManager));
+                else if (menuItems[selectedIndex] == "Leader Board")
+                    game1.ChangeState(new LeaderBoardState(game1, graphicsDevice, contentManager));
                 else if (menuItems[selectedIndex] == "Exit")
                     game1.Exit();
             }

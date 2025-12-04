@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework.Input;
 using prrprr_projekt_oop.Entities;
 using prrprr_projekt_oop.Systems;
 using prrprr_projekt_oop.Entities.Projectiles;
+using prrprr_projekt_oop.Data;
 
 namespace prrprr_projekt_oop.States
 {
@@ -24,12 +25,15 @@ namespace prrprr_projekt_oop.States
         private Texture2D playerTexture;
         private SoundEffect invincibilitySound;
         private bool gameOver = false;
+        private LeaderBoardEntry currentLeaderBoardEntry;
+        private bool uploadedToLeaderBoard = false;
 
         public GameState(Game1 game1, GraphicsDevice graphicsDevice, ContentManager content)
             : base(game1, graphicsDevice, content)
         {
             score = new ScoreSystem();
             BGcolor = new Color(30, 25, 40);
+            currentLeaderBoardEntry = null;
         }
 
         public override void LoadContent()
@@ -79,6 +83,16 @@ namespace prrprr_projekt_oop.States
 
             if (gameOver)
             {
+                currentLeaderBoardEntry = new LeaderBoardEntry(
+                    score.Name.Length > 0 ? score.Name : "---",
+                    score.Value,
+                    DateTime.UtcNow
+                );
+                if (!uploadedToLeaderBoard)
+                {
+                    LeaderBoardSystem.AddEntry(currentLeaderBoardEntry);
+                    uploadedToLeaderBoard = true;
+                }
                 if (InputSystem.IsKeyPressed(Keys.Enter) && !starting)
                 {
                     game1.ChangeState(new MenuState(game1, graphicsDevice, contentManager));
@@ -242,6 +256,10 @@ namespace prrprr_projekt_oop.States
 
             DrawGame(gameTime, spriteBatch);
 
+            spriteBatch.End();
+
+            spriteBatch.Begin();
+
             DrawUi(spriteBatch);
 
             if (!score.PickedName)
@@ -299,7 +317,7 @@ namespace prrprr_projekt_oop.States
         {
             spriteBatch.DrawString(
                 font,
-                $"XP: {player.XP}",
+                $"XP: {player.XP} / {player.XPToNextLevel}",
                 new Vector2(10, 10 + font.LineSpacing),
                 Color.LightGreen
             );
