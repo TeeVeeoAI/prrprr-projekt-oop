@@ -34,11 +34,11 @@ namespace prrprr_projekt_oop.Systems
             File.WriteAllText(fileName, json);
         }
 
-        public static void Add(string name, int score)
+        public static void Add(string name, int score, int level)
         {
             if (string.IsNullOrWhiteSpace(name)) name = "---";
             List<LeaderBoardEntry> entries = Load();
-            entries.Add(new LeaderBoardEntry(name, score, DateTime.UtcNow ));
+            entries.Add(new LeaderBoardEntry(name, score, DateTime.UtcNow, level));
             entries = entries.OrderByDescending(e => e.Score).ThenBy(e => e.Date).ToList();
             Save(entries);
         }

@@ -15,12 +15,16 @@ namespace prrprr_projekt_oop.States
     {
         private List<LeaderBoardEntry> entries;
         private int maxShow = 15;
+        private int boxW = 800;
+        private int boxH = 600;
+        private Rectangle lederBoardBox;
 
         public LeaderBoardState(Game1 game, GraphicsDevice graphicsDevice, ContentManager content)
             : base(game, graphicsDevice, content)
         {
             entries = new List<LeaderBoardEntry>();
             BGcolor = Color.Black;
+            lederBoardBox = new Rectangle((int)Game1.ScreenSize.X / 2 - boxW / 2, (int)Game1.ScreenSize.Y / 2 - boxH / 2, boxW, boxH);
         }
 
         public override void LoadContent()
@@ -54,32 +58,38 @@ namespace prrprr_projekt_oop.States
         {
             spriteBatch.Begin();
 
-            int boxW = 800;
-            int boxH = 600;
-            int boxX = (int)Game1.ScreenSize.X / 2 - boxW / 2;
-            int boxY = (int)Game1.ScreenSize.Y / 2 - boxH / 2;
-
-            spriteBatch.Draw(pixel, new Rectangle(boxX, boxY, boxW, boxH), new Color(10, 10, 10, 220));
+            spriteBatch.Draw(pixel, lederBoardBox, new Color(10, 10, 10, 220));
 
             string title = "Leader Board";
-            spriteBatch.DrawString(font, title, new Vector2(Game1.ScreenSize.X / 2 - font.MeasureString(title).X / 2, boxY + 10), Color.Gold);
+            spriteBatch.DrawString(font, title, new Vector2(Game1.ScreenSize.X / 2 - font.MeasureString(title).X / 2, lederBoardBox.Y + 10), Color.Gold);
 
-            string header = "#   Name               Score";
-            spriteBatch.DrawString(font, header, new Vector2(boxX + 20, boxY + 50), Color.LightGray);
+            string[] header = ["#", "Name:", "Score:", "Level:"];
+            Rectangle[] columns = new Rectangle[]
+            {
+                new Rectangle(lederBoardBox.X + 20, lederBoardBox.Y + 50, 20, font.LineSpacing),
+                new Rectangle(lederBoardBox.X + 40, lederBoardBox.Y + 50, 180, font.LineSpacing),
+                new Rectangle(lederBoardBox.X + 220, lederBoardBox.Y + 50, 140, font.LineSpacing),
+                new Rectangle(lederBoardBox.X + 360, lederBoardBox.Y + 50, 100, font.LineSpacing)
+            };
+            for (int i = 0; i < header.Length; i++){
+                spriteBatch.DrawString(font, header[i], new Vector2((float)columns[i].X, (float)columns[i].Y), Color.LightGray);
+            }
 
-            int drawY = boxY + 50 + font.LineSpacing + 8;
+            int drawY = lederBoardBox.Y + 50 + font.LineSpacing + 8;
             int count = Math.Min(entries.Count, maxShow);
             for (int i = 0; i < count; i++)
             {
                 var e = entries[i];
-                string name = e.Name ?? "---";
+                string name = e.Name;
                 if (name.Length > 18) name = name.Substring(0, 18) + "...";
-                string line = $"{i + 1,2}. {name,-18} {e.Score,6}";
-                spriteBatch.DrawString(font, line, new Vector2(boxX + 20, drawY + i * font.LineSpacing), Color.White);
+                string[] line = [$"{i+ 1}.", $"{name}", $"{e.Score}", $"{e.Level}"];
+                for (int j = 0; j < line.Length; j++){
+                    spriteBatch.DrawString(font, line[j], new Vector2((float)columns[j].X, (float)(drawY + i * font.LineSpacing)), Color.White);
+                }
             }
 
             string instr = "Back: Back    C: Clear leaderboard";
-            spriteBatch.DrawString(font, instr, new Vector2(Game1.ScreenSize.X / 2 - font.MeasureString(instr).X / 2, boxY + boxH - font.LineSpacing - 10), Color.White);
+            spriteBatch.DrawString(font, instr, new Vector2(Game1.ScreenSize.X / 2 - font.MeasureString(instr).X / 2, lederBoardBox.Y + boxH - font.LineSpacing - 10), Color.White);
 
             spriteBatch.End();
         }

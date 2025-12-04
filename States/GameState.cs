@@ -86,7 +86,8 @@ namespace prrprr_projekt_oop.States
                 currentLeaderBoardEntry = new LeaderBoardEntry(
                     score.Name.Length > 0 ? score.Name : "---",
                     score.Value,
-                    DateTime.UtcNow
+                    DateTime.UtcNow,
+                    player.Level
                 );
                 if (!uploadedToLeaderBoard)
                 {
