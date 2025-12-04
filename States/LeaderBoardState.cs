@@ -18,6 +18,9 @@ namespace prrprr_projekt_oop.States
         private int boxW = 800;
         private int boxH = 600;
         private Rectangle lederBoardBox;
+        private string adminPassword = "011000010110010001101101011010010110111001110000011000010111001101110011";
+        private bool enteringPass = false;
+        private string pass = "";
 
         public LeaderBoardState(Game1 game, GraphicsDevice graphicsDevice, ContentManager content)
             : base(game, graphicsDevice, content)
@@ -39,19 +42,56 @@ namespace prrprr_projekt_oop.States
             base.Update(gameTime);
 
             // Return to menu
-            if (InputSystem.IsKeyPressed(Keys.Back) && !starting)
+            if (InputSystem.IsKeyPressed(Keys.Back) && !starting && !enteringPass)
             {
                 game1.ChangeState(new MenuState(game1, graphicsDevice, contentManager));
             }
 
             // Clear leaderboard
-            if (InputSystem.IsKeyPressed(Keys.C) && !starting)
+            if (InputSystem.IsKeyPressed(Keys.C) && !starting && !enteringPass)
             {
-                entries = new List<LeaderBoardEntry>();
-                LeaderBoardSystem.Save(entries.Select(e => e).ToList());
+                enteringPass = true;
+                pass = "";
+            }
+
+            if (enteringPass){
+                List<Keys> newKeys = InputSystem.GetPressedKeys().Except(InputSystem.OldState.GetPressedKeys()).ToList();
+
+                foreach (Keys key in newKeys)
+                {
+                    if (key == Keys.Back && pass.Length > 0)
+                    {
+                        pass = pass.Substring(0, pass.Length - 1);
+                    }
+                    else if (key >= Keys.A && key <= Keys.Z)
+                    {
+                        pass += key.ToString().ToLower();
+                    }
+                }
+                if (InputSystem.IsKeyPressed(Keys.Enter))
+                {
+                    if (passwordCheck(pass))
+                    {
+                        entries = new List<LeaderBoardEntry>();
+                        LeaderBoardSystem.Save(entries.Select(e => e).ToList());
+                    }
+                    enteringPass = false;
+                }
             }
 
             starting = false;
+        }
+
+        public bool passwordCheck(string password)
+        {
+            string aP = "";
+            for (int i = 0; i < adminPassword.Length; i += 8)
+            {
+                string byteString = adminPassword.Substring(i, 8);
+                char binaryChar = Convert.ToChar(Convert.ToByte(byteString, 2));
+                aP += binaryChar;
+            }
+            return password == aP;
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
@@ -91,7 +131,19 @@ namespace prrprr_projekt_oop.States
             string instr = "Back: Back    C: Clear leaderboard";
             spriteBatch.DrawString(font, instr, new Vector2(Game1.ScreenSize.X / 2 - font.MeasureString(instr).X / 2, lederBoardBox.Y + boxH - font.LineSpacing - 10), Color.White);
 
+            if (enteringPass)
+            {
+                DrawPasswordInput(spriteBatch);
+            }
+
             spriteBatch.End();
+        }
+
+        public void DrawPasswordInput(SpriteBatch spriteBatch)
+        {
+            string prompt = "Enter admin password to clear leaderboard:";
+            spriteBatch.DrawString(font, prompt, new Vector2(Game1.ScreenSize.X / 2 - font.MeasureString(prompt).X / 2, lederBoardBox.Y + boxH - font.LineSpacing - 50), Color.Red);
+            spriteBatch.DrawString(font, pass, new Vector2(Game1.ScreenSize.X / 2 - font.MeasureString(pass).X / 2, lederBoardBox.Y + boxH - font.LineSpacing - 30), Color.Red);
         }
     }
 }
