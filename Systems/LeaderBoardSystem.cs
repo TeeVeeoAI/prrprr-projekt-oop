@@ -20,6 +20,7 @@ namespace prrprr_projekt_oop.Systems
             string json = File.ReadAllText(fileName);
             JsonSerializerOptions opts = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
             List<LeaderBoardEntry> list = JsonSerializer.Deserialize<List<LeaderBoardEntry>>(json, opts);
+            list = list.OrderByDescending(e => e.Score).ThenBy(e => e.Date).ToList();
             return list ?? new List<LeaderBoardEntry>();
         }
 

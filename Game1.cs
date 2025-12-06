@@ -38,9 +38,15 @@ public class Game1 : Game
 
     protected override void Initialize()
     {
-        // TODO: Add your initialization logic here
+        Window.TextInput += OnTextInput;
 
         base.Initialize();
+    }
+
+    private void OnTextInput(object sender, TextInputEventArgs e)
+    {
+        //Forward typed character to InputSystem for consumption by states
+        InputSystem.QueueTypedChar(e.Character);
     }
 
     protected override void LoadContent()

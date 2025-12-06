@@ -27,24 +27,34 @@ namespace prrprr_projekt_oop.Systems
 
         public void PickName() //If i want a leaderboard later
         {
+            // Confirm with Enter
             if (InputSystem.IsKeyPressed(Keys.Enter) && name.Length > 0)
             {
                 pickedName = true;
-                onScreenName = name.Length > 10 ? $"{name[0]}{name[1]}{name[2]}{name[3]}{name[4]}{name[5]}{name[6]}{name[7]}{name[8]}{name[9]}...": name;
+                onScreenName = name.Length > 10 ? name.Substring(0, 10) + "..." : name;
+                InputSystem.ClearTypedBuffer();
                 return;
             }
 
-            List<Keys> newKeys = InputSystem.GetPressedKeys().Except(InputSystem.OldState.GetPressedKeys()).ToList();
-
-            foreach (Keys key in newKeys)
+            // Backspace handling
+            if (InputSystem.IsKeyPressed(Keys.Back) && name.Length > 0)
             {
-                if (key == Keys.Back && name.Length > 0)
+                name = name.Substring(0, name.Length - 1);
+            }
+
+            // Get typed characters
+            char c;
+            while (InputSystem.TryGetTypedChar(out c))
+            {
+                // Ignore control characters except allow space
+                if (char.IsControl(c) && c != ' ') continue;
+
+                // Allow letters, digits, punctuation and space
+                if (char.IsLetterOrDigit(c) || char.IsPunctuation(c) || char.IsWhiteSpace(c))
                 {
-                    name = name.Substring(0, name.Length - 1);
-                }
-                else if (key >= Keys.A && key <= Keys.Z)
-                {
-                    name += key.ToString();
+                    name += c;
+                    if (name.Length > 20) // limit length
+                        name = name.Substring(0, 20);
                 }
             }
         }

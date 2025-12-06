@@ -59,7 +59,6 @@ namespace prrprr_projekt_oop.Systems
             {
                 spawnTimer.Restart();
 
-                // Build dictionary of candidate enemy types with their weights
                 Dictionary<string, float> candidates = new Dictionary<string, float>();
 
                 // ClassicEnemy base weight
@@ -76,6 +75,7 @@ namespace prrprr_projekt_oop.Systems
                 float total = candidates.Values.Sum();
                 if (total <= 0f)
                 {
+                    spawnInterval -= 10;
                     return new ClassicEnemy(texture, player);
                 }
 
@@ -95,10 +95,13 @@ namespace prrprr_projekt_oop.Systems
                 switch (chosen)
                 {
                     case "shooter":
+                        spawnInterval -= 10;
                         return new ShooterEnemy(texture, projectileTexture, player);
                     case "buff":
+                        spawnInterval -= 10;
                         return new BuffEnemy(texture, player);
                     default:
+                        spawnInterval -= 10;
                         return new ClassicEnemy(texture, player);
                 }
             }

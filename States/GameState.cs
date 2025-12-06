@@ -84,7 +84,7 @@ namespace prrprr_projekt_oop.States
             if (gameOver)
             {
                 currentLeaderBoardEntry = new LeaderBoardEntry(
-                    score.Name.Length > 0 ? score.Name : "---",
+                    score.Name,
                     score.Value,
                     DateTime.UtcNow,
                     player.Level

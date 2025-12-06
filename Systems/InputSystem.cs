@@ -30,6 +30,30 @@ namespace prrprr_projekt_oop.Systems
             mstateNew = Mouse.GetState();
         }
 
+        // Queue for text input characters (from Window.TextInput)
+        private static Queue<char> typedChars = new Queue<char>();
+
+        public static void QueueTypedChar(char c)
+        {
+            typedChars.Enqueue(c);
+        }
+
+        public static bool TryGetTypedChar(out char c)
+        {
+            if (typedChars.Count > 0)
+            {
+                c = typedChars.Dequeue();
+                return true;
+            }
+            c = '\0';
+            return false;
+        }
+
+        public static void ClearTypedBuffer()
+        {
+            typedChars.Clear();
+        }
+
         public static KeyboardState NewState { get => kstateNew; }
         public static KeyboardState OldState { get => kstateOld; }
         public static MouseState NewMouseState { get => mstateNew; }
