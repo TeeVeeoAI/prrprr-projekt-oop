@@ -7,11 +7,11 @@ namespace prrprr_projekt_oop.Entities
 {
     public class BuffEnemy : ClassicEnemy
     {
-        public BuffEnemy(Texture2D texture, Player player = null, float speed = 180f)
-            : base(texture, player, 2)
+        public BuffEnemy(Texture2D texture, Player player = null, float difficultyMultiplier = 1, float speed = 180f)
+            : base(texture, player, difficultyMultiplier, 2)
         {
-            this.speed = speed;
-            hp = 6;
+            this.speed = speed * difficultyMultiplier;
+            hp = 6 * (int)difficultyMultiplier;
             color = Color.Gold;
         }
     }

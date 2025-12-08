@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Input;
+using prrprr_projekt_oop.Enums;
 
 namespace prrprr_projekt_oop.Systems
 {
@@ -25,7 +26,7 @@ namespace prrprr_projekt_oop.Systems
             this.pickedName = false;
         }
 
-        public void PickName() //If i want a leaderboard later
+        public void PickName()
         {
             // Confirm with Enter
             if (InputSystem.IsKeyPressed(Keys.Enter) && name.Length > 0)

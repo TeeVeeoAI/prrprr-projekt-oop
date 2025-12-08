@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using prrprr_projekt_oop.Systems;
 using prrprr_projekt_oop.Entities.Weapons;
 using prrprr_projekt_oop.Entities.Projectiles;
+using prrprr_projekt_oop.Enums;
 
 namespace prrprr_projekt_oop.Entities
 {
@@ -20,12 +21,15 @@ namespace prrprr_projekt_oop.Entities
             get => projectiles;
         }
 
-        public ShooterEnemy(Texture2D texture, Texture2D projectileTexture, Player player = null, float speed = 150f)
+        public ShooterEnemy(Texture2D texture, Texture2D projectileTexture, Player player = null, float difficultyMultiplier = 1, float speed = 150f)
             : base(EnemySpawnerSystem.PickSpawnPos(), new Vector2(50, 50), texture, Color.Cyan, 1, 3, speed)
         {
             this.targetPlayer = player;
             this.projectileTexture = projectileTexture;
-            this.weapon = new Rifle(1.5f);
+            this.weapon = new Rifle(1.5f / difficultyMultiplier, (int)(1*difficultyMultiplier));
+            this.speed *= difficultyMultiplier;
+            this.hp = (int)(this.hp * difficultyMultiplier);
+            this.damage = (int)(this.damage * difficultyMultiplier);
         }
 
         public override void Update(GameTime gameTime)

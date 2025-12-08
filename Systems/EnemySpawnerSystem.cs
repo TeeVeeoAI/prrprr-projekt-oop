@@ -5,17 +5,27 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Media;
 using prrprr_projekt_oop.Entities;
+using prrprr_projekt_oop.Enums;
 
 namespace prrprr_projekt_oop.Systems
 {
     public static class EnemySpawnerSystem
     {
-        public static Stopwatch spawnTimer = new Stopwatch();
-        public static int spawnInterval = 2000; // in milliseconds
         private static Random rand = new Random();
+        private static Stopwatch spawnTimer = new Stopwatch();
+        public static int spawnInterval = 2000; // in milliseconds
         public static float ShooterEnemyWeight = 0.3f;
         public static float BuffEnemyWeight = 0.1f;
+        public static Difficulty difficulty = Difficulty.Medium;
+        private static float[] difficultyMultiplier = new float[] 
+        { 
+            0.8f, // Easy
+            1.0f, // Medium
+            1.2f  // Hard
+        };
+
 
         public static Vector2 PickSpawnPos()
         {
@@ -76,7 +86,7 @@ namespace prrprr_projekt_oop.Systems
                 if (total <= 0f)
                 {
                     spawnInterval -= 10;
-                    return new ClassicEnemy(texture, player);
+                    return new ClassicEnemy(texture, player, difficultyMultiplier[(int)difficulty]);
                 }
 
                 double r = rand.NextDouble() * total;
@@ -96,13 +106,13 @@ namespace prrprr_projekt_oop.Systems
                 {
                     case "shooter":
                         spawnInterval -= 10;
-                        return new ShooterEnemy(texture, projectileTexture, player);
+                        return new ShooterEnemy(texture, projectileTexture, player, difficultyMultiplier[(int)difficulty]);
                     case "buff":
                         spawnInterval -= 10;
-                        return new BuffEnemy(texture, player);
+                        return new BuffEnemy(texture, player, difficultyMultiplier[(int)difficulty]);
                     default:
                         spawnInterval -= 10;
-                        return new ClassicEnemy(texture, player);
+                        return new ClassicEnemy(texture, player, difficultyMultiplier[(int)difficulty]);
                 }
             }
             return null;

@@ -1,6 +1,7 @@
 using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using prrprr_projekt_oop.Enums;
 using prrprr_projekt_oop.Systems;
 
 namespace prrprr_projekt_oop.Entities
@@ -9,10 +10,14 @@ namespace prrprr_projekt_oop.Entities
     {
         private Player targetPlayer;
 
-        public ClassicEnemy(Texture2D texture, Player player = null, int damage = 1)
-            : base(EnemySpawnerSystem.PickSpawnPos(), new Vector2(50, 50), texture, Color.Violet, damage, 3)
+        public ClassicEnemy(Texture2D texture, Player player = null, float difficultyMultiplier = 1,  int damage = 1)
+            : base(EnemySpawnerSystem.PickSpawnPos(), new Vector2(50, 50), texture, Color.Violet, (int)(damage* difficultyMultiplier), 3)
         {
             this.targetPlayer = player;
+            this.damage = (int)(this.damage *difficultyMultiplier);
+            this.speed *= difficultyMultiplier;
+            this.hp = (int)(this.hp * difficultyMultiplier);
+
         }
 
         public override void Update(GameTime gameTime)

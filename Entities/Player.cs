@@ -40,7 +40,6 @@ namespace prrprr_projekt_oop.Entities
         {
             get => xp;
         }
-
         public int XPToNextLevel
         {
             get => xpToNextLevel;
@@ -49,22 +48,18 @@ namespace prrprr_projekt_oop.Entities
         {
             get => xpPickupCollider;
         }
-
         public float PullRadius
         {
             get => pullRadius;
         }
-
         public float PullSpeed
         {
             get => pullSpeed;
         }
-
         public int Level
         {
             get => level;
         }
-
         public List<Projectile> Projectiles
         {
             get => projectiles;
@@ -76,10 +71,10 @@ namespace prrprr_projekt_oop.Entities
         {
             keys = new Keys[]
             {
-                Keys.W,
-                Keys.A,
-                Keys.S,
-                Keys.D
+                Keys.W, // Up
+                Keys.A, // Left
+                Keys.S, // Down
+                Keys.D // Right
             };
 
             this.projectileTexture = projectileTexture;
@@ -91,7 +86,8 @@ namespace prrprr_projekt_oop.Entities
             {
                 1.1f, // Speed
                 0.9f, // FireRate
-                1.2f  // Damage
+                1.2f,  // Damage
+                1.15f // PullRadius
             };
         }
 
@@ -237,7 +233,7 @@ namespace prrprr_projekt_oop.Entities
 
         #region Health methods
 
-        public void TakeDamage(int damage)
+        public void TakeDamage(int damage = 1)
         {
             hp -= damage;
         }
@@ -273,6 +269,7 @@ namespace prrprr_projekt_oop.Entities
             xpToNextLevel = (int)(xpToNextLevel * 1.5f);
             speed *= levelMultipliers[(int)PlayerUpgrades.Speed];
             weapon = new Rifle(weapon.FireRateSeconds * levelMultipliers[(int)PlayerUpgrades.FireRate], (int)(weapon.Damage * levelMultipliers[(int)PlayerUpgrades.Damage]));
+            pullRadius *= levelMultipliers[(int)PlayerUpgrades.PullRadius];
         }
 
         #endregion
@@ -292,7 +289,8 @@ namespace prrprr_projekt_oop.Entities
     {
         Speed = 0,
         FireRate,
-        Damage
+        Damage,
+        PullRadius
     }
 
     #endregion

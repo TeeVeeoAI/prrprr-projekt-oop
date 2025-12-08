@@ -11,6 +11,7 @@ using prrprr_projekt_oop.Entities;
 using prrprr_projekt_oop.Systems;
 using prrprr_projekt_oop.Entities.Projectiles;
 using prrprr_projekt_oop.Data;
+using prrprr_projekt_oop.Enums;
 
 namespace prrprr_projekt_oop.States
 {
@@ -27,6 +28,8 @@ namespace prrprr_projekt_oop.States
         private bool gameOver = false;
         private LeaderBoardEntry currentLeaderBoardEntry;
         private bool uploadedToLeaderBoard = false;
+        private Difficulty difficulty = Difficulty.Medium;
+        private bool pickedDifficulty = false;
 
         public GameState(Game1 game1, GraphicsDevice graphicsDevice, ContentManager content)
             : base(game1, graphicsDevice, content)
@@ -105,8 +108,13 @@ namespace prrprr_projekt_oop.States
             {
                 score.PickName();
             }
+            else if(!pickedDifficulty && !starting)
+            {
+                PickDifficulty();
+            }
             else
             {
+                
                 player.Update(gameTime);
                 for (int i = 0; i < enemies.Count; i++)
                 {
@@ -183,6 +191,31 @@ namespace prrprr_projekt_oop.States
             }
 
             starting = false;
+        }
+
+        public void PickDifficulty()
+        {
+            if (InputSystem.IsKeyPressed(Keys.D1))
+            {
+                difficulty = Difficulty.Easy;
+                EnemySpawnerSystem.ShooterEnemyWeight = 0.2f;
+                EnemySpawnerSystem.BuffEnemyWeight = 0.05f;
+                pickedDifficulty = true;
+            }
+            else if (InputSystem.IsKeyPressed(Keys.D2))
+            {
+                difficulty = Difficulty.Medium;
+                EnemySpawnerSystem.ShooterEnemyWeight = 0.3f;
+                EnemySpawnerSystem.BuffEnemyWeight = 0.1f;
+                pickedDifficulty = true;
+            }
+            else if (InputSystem.IsKeyPressed(Keys.D3))
+            {
+                difficulty = Difficulty.Hard;
+                EnemySpawnerSystem.ShooterEnemyWeight = 0.5f;
+                EnemySpawnerSystem.BuffEnemyWeight = 0.2f;
+                pickedDifficulty = true;
+            }
         }
 
         public void ReamoveDeadEnemy(BaseEnemy e, ref int index)
@@ -265,6 +298,9 @@ namespace prrprr_projekt_oop.States
 
             if (!score.PickedName)
                 DrawPickName(spriteBatch);
+
+            else if (!pickedDifficulty)
+                DrawDifficultyPick(spriteBatch);
 
             if (gameOver)
                 DrawGameOver(spriteBatch);
@@ -419,6 +455,52 @@ namespace prrprr_projekt_oop.States
                 new Vector2(
                     Game1.ScreenSize.X / 2 - font.MeasureString("ENTER to confirm").X / 2,
                     Game1.ScreenSize.Y / 2 - font.LineSpacing * -2
+                ),
+                Color.White
+            );
+        }
+
+        public void DrawDifficultyPick(SpriteBatch spriteBatch)
+        {
+            spriteBatch.Draw(
+                pixel,
+                new Rectangle(0, 0, (int)Game1.ScreenSize.X, (int)Game1.ScreenSize.Y),
+                new Color(10, 10, 10)
+            );
+
+            spriteBatch.DrawString(
+                font,
+                "Select Difficulty:",
+                new Vector2(
+                    Game1.ScreenSize.X / 2 - font.MeasureString("Select Difficulty:").X / 2,
+                    Game1.ScreenSize.Y / 2 - font.LineSpacing * 4
+                ),
+                Color.White
+            );
+            spriteBatch.DrawString(
+                font,
+                "1 - Easy",
+                new Vector2(
+                    Game1.ScreenSize.X / 2 - font.MeasureString("1 - Easy").X / 2,
+                    Game1.ScreenSize.Y / 2 - font.LineSpacing * 2
+                ),
+                Color.White
+            );
+            spriteBatch.DrawString(
+                font,
+                "2 - Medium",
+                new Vector2(
+                    Game1.ScreenSize.X / 2 - font.MeasureString("2 - Medium").X / 2,
+                    Game1.ScreenSize.Y / 2
+                ),
+                Color.White
+            );
+            spriteBatch.DrawString(
+                font,
+                "3 - Hard",
+                new Vector2(
+                    Game1.ScreenSize.X / 2 - font.MeasureString("3 - Hard").X / 2,
+                    Game1.ScreenSize.Y / 2 + font.LineSpacing * 2
                 ),
                 Color.White
             );
