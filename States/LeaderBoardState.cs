@@ -193,13 +193,14 @@ namespace prrprr_projekt_oop.States
                 Color.Gold
             );
 
-            string[] header = { "#", "Name", "Score", "Date" };
+            string[] header = { "#", "Name", "Score", "Level", "Date" };
             Rectangle[] columns =
             {
                 new Rectangle(lederBoardBox.X + 20, lederBoardBox.Y + 50, 40, font.LineSpacing),
                 new Rectangle(lederBoardBox.X + 60, lederBoardBox.Y + 50, 240, font.LineSpacing),
                 new Rectangle(lederBoardBox.X + 310, lederBoardBox.Y + 50, 120, font.LineSpacing),
-                new Rectangle(lederBoardBox.X + 440, lederBoardBox.Y + 50, 320, font.LineSpacing)
+                new Rectangle(lederBoardBox.X + 440, lederBoardBox.Y + 50, 100, font.LineSpacing),
+                new Rectangle(lederBoardBox.X + 540, lederBoardBox.Y + 50, 320, font.LineSpacing)
             };
 
             for (int i = 0; i < header.Length; i++)
@@ -230,7 +231,8 @@ namespace prrprr_projekt_oop.States
                     $"{i + 1}.",
                     name,
                     e.Score.ToString(),
-                    e.Date.ToString("g")
+                    e.Level.ToString(),
+                    $"{e.Date.ToShortTimeString()} {e.Date.ToShortDateString()}"
                 };
 
                 for (int j = 0; j < line.Length; j++)

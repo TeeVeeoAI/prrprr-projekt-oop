@@ -15,6 +15,9 @@ namespace prrprr_projekt_oop.Entities
 {
     public class Player : BaseEntity
     {
+
+        #region Variables
+
         private Keys[] keys;
         private Weapon weapon;
         private List<Projectile> projectiles = new List<Projectile>();
@@ -28,7 +31,11 @@ namespace prrprr_projekt_oop.Entities
         private int xp = 0;
         private int level = 1;
         private int xpToNextLevel = 100;
+        private float[] levelMultipliers;
 
+        #endregion
+
+        #region Properties
         public int XP
         {
             get => xp;
@@ -62,6 +69,7 @@ namespace prrprr_projekt_oop.Entities
         {
             get => projectiles;
         }
+        #endregion
 
         public Player(Vector2 heightAndWidth, Texture2D texture, Texture2D projectileTexture)
         : base(Game1.ScreenSize / 2 - heightAndWidth, 400f, heightAndWidth, texture, 5, Color.White)
@@ -78,28 +86,47 @@ namespace prrprr_projekt_oop.Entities
             xpPickupCollider = new Circle(new Vector2(position.X + hitbox.Width / 2, position.Y + hitbox.Height / 2), Math.Max(hitbox.Width, hitbox.Height) * 2f);
 
             weapon = new Rifle();
+
+            levelMultipliers = new float[]
+            {
+                1.1f, // Speed
+                0.9f, // FireRate
+                1.2f  // Damage
+            };
         }
 
         public override void Update(GameTime gameTime)
         {
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
+            #region Invincibility Timer
+
             if (invincibilityTimer > 0)
             {
                 invincibilityTimer -= deltaTime;
             }
+
+            #endregion
+
+            #region Leveling Up
 
             if (xp >= xpToNextLevel)
             {
                 xp -= xpToNextLevel;
                 LevelUp();
             }
+            #endregion
+            
+            #region Player Rotation and Aiming
 
             Vector2 mousePos = InputSystem.GetMousePosition();
             Vector2 playerCenter = position + new Vector2(hitbox.Width / 2, hitbox.Height / 2);
             Vector2 dirToMouse = mousePos - playerCenter;
             rotation = (float)Math.Atan2(dirToMouse.Y, dirToMouse.X) + (float)Math.PI / 2f;
 
+            #endregion
+
+            #region Movement
             // Reset velocity to zero and accumulate input directions
             Vector2 inputDirection = Vector2.Zero;
 
@@ -144,16 +171,10 @@ namespace prrprr_projekt_oop.Entities
 
             xpPickupCollider.ChangePos(new Vector2(position.X + hitbox.Width / 2, position.Y + hitbox.Height / 2));
             hitbox.Location = position.ToPoint();
+            #endregion
         }
 
-        public void LevelUp()
-        {
-            level++;
-            xpToNextLevel = (int)(xpToNextLevel * 1.5f);
-            speed *= 1.1f;
-            weapon = new Rifle(weapon.FireRateSeconds * 0.9f, weapon.Damage * 2);
-        }
-
+        #region Weapon methods
         public Projectile TryShoot(GameTime gameTime, Vector2 direction, Texture2D projTexture)
         {
             if (weapon == null) return null;
@@ -172,6 +193,10 @@ namespace prrprr_projekt_oop.Entities
             }
 
         }
+
+        #endregion
+
+        #region Drawing
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
@@ -208,6 +233,10 @@ namespace prrprr_projekt_oop.Entities
             color = newColor;
         }
 
+        #endregion
+
+        #region Health methods
+
         public void TakeDamage(int damage)
         {
             hp -= damage;
@@ -228,12 +257,28 @@ namespace prrprr_projekt_oop.Entities
             invincibilityTimer = invincibilityDuration;
         }
 
+        #endregion
+
+        #region Leveling and XP methods
+
         public void AddXP(int amount)
         {
             if (amount <= 0) return;
             xp += amount;
         }
+
+        public void LevelUp()
+        {
+            level++;
+            xpToNextLevel = (int)(xpToNextLevel * 1.5f);
+            speed *= levelMultipliers[(int)PlayerUpgrades.Speed];
+            weapon = new Rifle(weapon.FireRateSeconds * levelMultipliers[(int)PlayerUpgrades.FireRate], (int)(weapon.Damage * levelMultipliers[(int)PlayerUpgrades.Damage]));
+        }
+
+        #endregion
     }
+
+    #region Enums
 
     public enum PlayerKeys
     {
@@ -242,5 +287,14 @@ namespace prrprr_projekt_oop.Entities
         Down,
         Right
     }
+
+    public enum PlayerUpgrades
+    {
+        Speed = 0,
+        FireRate,
+        Damage
+    }
+
+    #endregion
 }
 
