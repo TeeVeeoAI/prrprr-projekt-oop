@@ -4,15 +4,17 @@
   <Platform>Windows</Platform>
   <Config />
   <SourceFiles>
-    <File>C:/GitHub/prrprr-projekt-oop/Content/Fonts/MainFont.spritefont</File>
-    <File>C:/GitHub/prrprr-projekt-oop/Content/Images/HealthBar.png</File>
-    <File>C:/GitHub/prrprr-projekt-oop/Content/Images/HealthBarV2.png</File>
-    <File>C:/GitHub/prrprr-projekt-oop/Content/Images/HealthBarV3.png</File>
-    <File>C:/GitHub/prrprr-projekt-oop/Content/Images/Player.png</File>
-    <File>C:/GitHub/prrprr-projekt-oop/Content/Images/Ship_4.png</File>
-    <File>C:/GitHub/prrprr-projekt-oop/Content/Images/XP.png</File>
+    <File>C:/Github/prrprr-projekt-oop/Content/Fonts/MainFont.spritefont</File>
+    <File>C:/Github/prrprr-projekt-oop/Content/Images/bullet.png</File>
+    <File>C:/Github/prrprr-projekt-oop/Content/Images/HealthBar.png</File>
+    <File>C:/Github/prrprr-projekt-oop/Content/Images/HealthBarV2.png</File>
+    <File>C:/Github/prrprr-projekt-oop/Content/Images/HealthBarV3.png</File>
+    <File>C:/Github/prrprr-projekt-oop/Content/Images/Player.png</File>
+    <File>C:/Github/prrprr-projekt-oop/Content/Images/Ship_4.png</File>
+    <File>C:/Github/prrprr-projekt-oop/Content/Images/XP.png</File>
   </SourceFiles>
   <DestFiles>
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />

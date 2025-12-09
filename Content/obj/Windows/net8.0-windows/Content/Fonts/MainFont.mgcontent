@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <SourceFile>C:/GitHub/prrprr-projekt-oop/Content/Fonts/MainFont.spritefont</SourceFile>
-  <SourceTime>2025-11-04T23:34:42.3584367+01:00</SourceTime>
-  <DestFile>C:/GitHub/prrprr-projekt-oop/Content/bin/Windows/Content/Fonts/MainFont.xnb</DestFile>
-  <DestTime>2025-12-08T20:22:57.1040557+01:00</DestTime>
+  <SourceFile>C:/Github/prrprr-projekt-oop/Content/Fonts/MainFont.spritefont</SourceFile>
+  <SourceTime>2025-06-02T12:42:50+02:00</SourceTime>
+  <DestFile>C:/Github/prrprr-projekt-oop/Content/bin/Windows/Content/Fonts/MainFont.xnb</DestFile>
+  <DestTime>2025-12-09T12:11:36.463148+01:00</DestTime>
   <Importer>FontDescriptionImporter</Importer>
   <ImporterTime>2025-06-02T12:31:02+02:00</ImporterTime>
   <Processor>FontDescriptionProcessor</Processor>

@@ -31,7 +31,7 @@ namespace prrprr_projekt_oop.Entities.Weapons
         {
             if (projectileColor == Color.Transparent)
             {
-                projectileColor = owner != null ? owner.GetType() == typeof(Player) ? Color.Green : Color.Red : Color.White;
+                projectileColor = owner != null ? owner.GetType() == typeof(Player) ? Color.White : Color.Red : Color.White;
             }
             double now = gameTime.TotalGameTime.TotalSeconds;
             if (now - lastShotTime < fireRateSeconds) return null;
@@ -43,7 +43,7 @@ namespace prrprr_projekt_oop.Entities.Weapons
             Vector2 velocity = dir * projectileSpeed;
             Vector2 spawnPos = origin + muzzleOffset;
 
-            Vector2 size = new Vector2(8, 8);
+            Vector2 size = new Vector2(20, 20);
 
             Projectile p = new Projectile(spawnPos, velocity, size, projTexture, 1, projectileColor, damage, owner);
             return p;

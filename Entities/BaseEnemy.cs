@@ -44,5 +44,6 @@ namespace prrprr_projekt_oop.Entities
         {
             return hp <= 0;
         }
+
     }
 }

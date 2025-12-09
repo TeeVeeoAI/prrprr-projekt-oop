@@ -1,14 +1,61 @@
-[
-  {
-    "Name": "TORE",
-    "Score": 16752,
-    "Date": "2025-12-06T14:12:37.1219071Z",
-    "Level": 6
-  },
-  {
-    "Name": "TORE",
-    "Score": 8965,
-    "Date": "2025-12-06T13:40:46.4063837Z",
-    "Level": 4
-  }
-]
+{
+  "difficultys": [
+    {
+      "difficulty": 0,
+      "entries": [
+        {
+          "Name": "TORE",
+          "Score": 16752,
+          "Date": "2025-12-06T14:12:37.1219071Z",
+          "Level": 6,
+          "Difficulty": 0
+        },
+        {
+          "Name": "TORE",
+          "Score": 8965,
+          "Date": "2025-12-06T13:40:46.4063837Z",
+          "Level": 4,
+          "Difficulty": 0
+        }
+      ]
+    },
+    {
+      "difficulty": 1,
+      "entries": [
+        {
+          "Name": "Tore",
+          "Score": 3986,
+          "Date": "2025-12-09T13:07:15.618631Z",
+          "Level": 3,
+          "Difficulty": 1
+        }
+      ]
+    },
+    {
+      "difficulty": 2,
+      "entries": [
+        {
+          "Name": "Toreee",
+          "Score": 873247276,
+          "Date": "2025-12-06T14:50:10.8277873Z",
+          "Level": 99,
+          "Difficulty": 2
+        },
+        {
+          "Name": "Tore",
+          "Score": 13627,
+          "Date": "2025-12-09T13:44:05.2564679Z",
+          "Level": 6,
+          "Difficulty": 2
+        },
+        {
+          "Name": "Tore",
+          "Score": 4710,
+          "Date": "2025-12-09T13:39:19.0385474Z",
+          "Level": 4,
+          "Difficulty": 2
+        }
+      ]
+    }
+  ]
+}

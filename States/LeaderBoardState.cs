@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using prrprr_projekt_oop.Systems;
 using prrprr_projekt_oop.Data;
+using prrprr_projekt_oop.Enums;
 
 namespace prrprr_projekt_oop.States
 {
@@ -21,12 +22,12 @@ namespace prrprr_projekt_oop.States
         }
 
         private ClearMode mode = ClearMode.None;
-
         private List<LeaderBoardEntry> entries;
         private int maxShow = 15;
         private int boxW = 800;
         private int boxH = 600;
         private Rectangle lederBoardBox;
+        private Rectangle difficultyButtonRect;
 
         private string adminPassword =
             "011000010110010001101101011010010110111001110000011000010111001101110011";
@@ -34,6 +35,7 @@ namespace prrprr_projekt_oop.States
         private string pass = "";
         private string clearIndex = "";
         private bool ignoreNextEnter = false;
+        private Difficulty difficulty = Difficulty.Easy;
 
         public LeaderBoardState(Game1 game, GraphicsDevice graphicsDevice, ContentManager content)
             : base(game, graphicsDevice, content)
@@ -52,7 +54,16 @@ namespace prrprr_projekt_oop.States
         public override void LoadContent()
         {
             font = contentManager.Load<SpriteFont>("Fonts/MainFont");
-            entries = LeaderBoardSystem.Load();
+            entries = LeaderBoardSystem.Load()
+                .Where(e => e.Difficulty == difficulty)
+                .ToList();
+
+            difficultyButtonRect = new Rectangle(
+                lederBoardBox.X + boxW - 150,
+                lederBoardBox.Y + 10,
+                130,
+                font.LineSpacing + 8
+            );
         }
 
         public override void Update(GameTime gameTime)
@@ -78,6 +89,20 @@ namespace prrprr_projekt_oop.States
                     mode = ClearMode.EnteringIndex;
                     clearIndex = "";
                     InputSystem.ClearTypedBuffer();
+                }
+                // cycle difficulty
+                if (InputSystem.IsKeyPressed(Keys.D))
+                {
+                    CycleDifficulty();
+                }
+                // mouse click cycle
+                if (InputSystem.IsLeftPressed())
+                {
+                    var mp = InputSystem.GetMousePosition();
+                    if (difficultyButtonRect.Contains((int)mp.X, (int)mp.Y))
+                    {
+                        CycleDifficulty();
+                    }
                 }
             }
 
@@ -140,19 +165,38 @@ namespace prrprr_projekt_oop.States
                     {
                         if (mode == ClearMode.EnteringPasswordForAll)
                         {
-                            entries.Clear();
+                            // Clear the entire leaderboard across all difficulties
+                            LeaderBoardSystem.Save(new List<LeaderBoardEntry>());
+                            entries = new List<LeaderBoardEntry>();
                         }
                         else if (mode == ClearMode.EnteringPasswordForSingle)
                         {
                             if (int.TryParse(clearIndex, out int idx))
                             {
-                                idx -= 1;
+                                idx -= 1; 
                                 if (idx >= 0 && idx < entries.Count)
-                                    entries.RemoveAt(idx);
+                                {
+                                    // Remove the corresponding entry from the full list so other difficulties are preserved
+                                    var toRemove = entries[idx];
+                                    var all = LeaderBoardSystem.Load();
+                                    var match = all.FirstOrDefault(e =>
+                                        e.Name == toRemove.Name &&
+                                        e.Score == toRemove.Score &&
+                                        e.Level == toRemove.Level &&
+                                        e.Date == toRemove.Date &&
+                                        e.Difficulty == toRemove.Difficulty);
+
+                                    if (match != null)
+                                    {
+                                        all.Remove(match);
+                                        LeaderBoardSystem.Save(all);
+                                    }
+
+                                    // Reload filtered entries for the current difficultytjxv
+                                    entries = LeaderBoardSystem.Load().Where(e => e.Difficulty == difficulty).ToList();
+                                }
                             }
                         }
-
-                        LeaderBoardSystem.Save(entries.ToList());
                     }
 
                     mode = ClearMode.None;
@@ -162,6 +206,15 @@ namespace prrprr_projekt_oop.States
             }
 
             starting = false;
+        }
+
+        private void CycleDifficulty()
+        {
+            var vals = Enum.GetValues(typeof(Difficulty)).Cast<Difficulty>().ToArray();
+            int idx = Array.IndexOf(vals, difficulty);
+            idx = (idx + 1) % vals.Length;
+            difficulty = vals[idx];
+            entries = LeaderBoardSystem.Load().Where(e => e.Difficulty == difficulty).ToList();
         }
 
         private string DecodeBinaryPassword(string bin)
@@ -184,7 +237,7 @@ namespace prrprr_projekt_oop.States
 
             spriteBatch.Draw(pixel, lederBoardBox, new Color(10, 10, 10, 220));
 
-            string title = "Leader Board";
+            string title = $"Leader Board | {difficulty}";
             spriteBatch.DrawString(
                 font,
                 title,
@@ -192,6 +245,8 @@ namespace prrprr_projekt_oop.States
                 lederBoardBox.Y + 10),
                 Color.Gold
             );
+
+            DrawDifficultyButton(spriteBatch);
 
             string[] header = { "#", "Name", "Score", "Level", "Date" };
             Rectangle[] columns =
@@ -267,6 +322,20 @@ namespace prrprr_projekt_oop.States
             }
 
             spriteBatch.End();
+        }
+
+        public void DrawDifficultyButton(SpriteBatch spriteBatch)
+        {
+            spriteBatch.Draw(pixel, difficultyButtonRect, new Color(30, 30, 30, 220));
+            string diffText = difficulty.ToString();
+            Vector2 dtSize = font.MeasureString(diffText);
+            spriteBatch.DrawString(
+                font,
+                diffText,
+                new Vector2(difficultyButtonRect.X + difficultyButtonRect.Width / 2 - dtSize.X / 2,
+                    difficultyButtonRect.Y + difficultyButtonRect.Height / 2 - dtSize.Y / 2),
+                Color.White
+            );
         }
 
         private void DrawPasswordInput(SpriteBatch spriteBatch)

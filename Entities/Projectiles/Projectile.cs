@@ -1,3 +1,4 @@
+using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using prrprr_projekt_oop.Entities;
@@ -42,6 +43,20 @@ namespace prrprr_projekt_oop.Entities.Projectiles
         public void Expire()
         {
             isExpired = true;
+        }
+
+        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        {
+            spriteBatch.Draw(
+                texture, 
+                position + new Vector2(hitbox.Width / 2, hitbox.Height / 2), 
+                null, 
+                color, 
+                (float)Math.Atan2(velocity.Y, velocity.X), 
+                new Vector2(texture.Width / 2f, texture.Height / 2f), 
+                hitbox.Size.ToVector2() / texture.Bounds.Size.ToVector2(),
+                SpriteEffects.None, 0f
+            );
         }
     }
 }

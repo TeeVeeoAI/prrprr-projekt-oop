@@ -58,5 +58,22 @@ namespace prrprr_projekt_oop.Entities
 
             hitbox.Location = position.ToPoint();
         }
+
+        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        {
+            Vector2 playerCenter = targetPlayer.Position + new Vector2(targetPlayer.Hitbox.Width / 2f, targetPlayer.Hitbox.Height / 2f);
+            Vector2 selfCenter = position + new Vector2(hitbox.Width / 2f, hitbox.Height / 2f);
+            Vector2 dir = playerCenter - selfCenter;
+            spriteBatch.Draw(
+                texture, 
+                position + new Vector2(hitbox.Width / 2, hitbox.Height / 2), 
+                null, 
+                color, 
+                (float)Math.Atan2(dir.Y, dir.X) + (float)Math.PI / 2f, 
+                new Vector2(texture.Width / 2f, texture.Height / 2f), 
+                hitbox.Size.ToVector2() / (texture.Bounds.Size.ToVector2()/2),
+                SpriteEffects.None, 0f
+            );
+        }
     }
 }

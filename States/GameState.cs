@@ -24,6 +24,8 @@ namespace prrprr_projekt_oop.States
         private Texture2D xpTexture;
         private Texture2D healthBar;
         private Texture2D playerTexture;
+        private Texture2D prjectileTexture;
+        private Texture2D enemyTexture;
         private SoundEffect invincibilitySound;
         private bool gameOver = false;
         private LeaderBoardEntry currentLeaderBoardEntry;
@@ -45,6 +47,8 @@ namespace prrprr_projekt_oop.States
             healthBar = contentManager.Load<Texture2D>("Images/HealthBarV3");
             playerTexture = contentManager.Load<Texture2D>("Images/Ship_4");
             xpTexture = contentManager.Load<Texture2D>("Images/XP");
+            prjectileTexture = contentManager.Load<Texture2D>("Images/bullet");
+            enemyTexture = contentManager.Load<Texture2D>("Images/Player");
 
             // Load invincibility sound if available (silently ignore if missing)
             try
@@ -71,7 +75,7 @@ namespace prrprr_projekt_oop.States
             player = new Player(
                 new Vector2(50, 50),
                 playerTexture,
-                pixel
+                prjectileTexture
             );
             enemies = new List<BaseEnemy>();
             xpPickups = new List<XpPickup>();
@@ -90,7 +94,8 @@ namespace prrprr_projekt_oop.States
                     score.Name,
                     score.Value,
                     DateTime.UtcNow,
-                    player.Level
+                    player.Level, 
+                    difficulty
                 );
                 if (!uploadedToLeaderBoard)
                 {
@@ -122,7 +127,7 @@ namespace prrprr_projekt_oop.States
                     e.Update(gameTime);
                 }
                 
-                BaseEnemy newEnemy = EnemySpawnerSystem.SpawnEnemy(pixel, pixel, player);
+                BaseEnemy newEnemy = EnemySpawnerSystem.SpawnEnemy(enemyTexture, prjectileTexture, player);
                 if (newEnemy != null)
                 {
                     enemies.Add(newEnemy);
