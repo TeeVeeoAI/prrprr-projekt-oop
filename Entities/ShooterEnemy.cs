@@ -49,10 +49,10 @@ namespace prrprr_projekt_oop.Entities
 
                 // Shoot at the player
                 Vector2 shootDir = playerCenter - selfCenter;
-                Projectile projectile = weapon.TryShoot(gameTime, selfCenter, shootDir, projectileTexture, this);
-                if (projectile != null)
+                var spawned = weapon.TryShoot(gameTime, selfCenter, shootDir, projectileTexture, this);
+                if (spawned != null && spawned.Count > 0)
                 {
-                    projectiles.Add(projectile);
+                    projectiles.AddRange(spawned);
                 }
             }
 

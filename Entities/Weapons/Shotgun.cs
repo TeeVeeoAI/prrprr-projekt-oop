@@ -9,11 +9,11 @@ namespace prrprr_projekt_oop.Entities.Weapons
 {
     public class Shotgun : Weapon
     {
-        public Shotgun() : base(0.5f, 1, Vector2.Zero, 400f)
+        public Shotgun(float fireRateSeconds = 0.5f, int damage = 1) : base(fireRateSeconds, damage, Vector2.Zero, 400f)
         {
         }
 
-        public override Projectile TryShoot(GameTime gameTime, Vector2 origin, Vector2 direction, Texture2D projTexture, BaseEntity owner = null)
+        public override List<Projectile> TryShoot(GameTime gameTime, Vector2 origin, Vector2 direction, Texture2D projTexture, BaseEntity owner = null)
         {
             double now = gameTime.TotalGameTime.TotalSeconds;
             if (now - lastShotTime < fireRateSeconds) return null;
@@ -26,7 +26,7 @@ namespace prrprr_projekt_oop.Entities.Weapons
             float spreadAngle = 15f * (float)Math.PI / 180f; //radians
             float baseAngle = (float)Math.Atan2(direction.Y, direction.X);
 
-            Projectile firstProjectile = null;
+            List<Projectile> spawned = new List<Projectile>();
             Vector2 size = new Vector2(8, 8);
 
             for (int i = 0; i < projectileCount; i++)
@@ -43,14 +43,10 @@ namespace prrprr_projekt_oop.Entities.Weapons
                 Vector2 spawnPos = origin + muzzleOffset;
 
                 Projectile p = new Projectile(spawnPos, velocity, size, projTexture, 1, Color.White, damage, owner);
-
-                if (firstProjectile == null)
-                {
-                    firstProjectile = p;
-                }
+                spawned.Add(p);
             }
 
-            return firstProjectile;
+            return spawned;
         }
     }
 }

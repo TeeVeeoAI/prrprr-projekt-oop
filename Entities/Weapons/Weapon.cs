@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using prrprr_projekt_oop.Entities.Projectiles;
@@ -27,7 +28,7 @@ namespace prrprr_projekt_oop.Entities.Weapons
             this.projectileSpeed = projectileSpeed;
         }
 
-        public virtual Projectile TryShoot(GameTime gameTime, Vector2 origin, Vector2 direction, Texture2D projTexture, BaseEntity owner = null)
+        public virtual List<Projectile> TryShoot(GameTime gameTime, Vector2 origin, Vector2 direction, Texture2D projTexture, BaseEntity owner = null)
         {
             if (projectileColor == Color.Transparent)
             {
@@ -46,7 +47,7 @@ namespace prrprr_projekt_oop.Entities.Weapons
             Vector2 size = new Vector2(20, 20);
 
             Projectile p = new Projectile(spawnPos, velocity, size, projTexture, 1, projectileColor, damage, owner);
-            return p;
+            return new List<Projectile> { p };
         }
     }
 }

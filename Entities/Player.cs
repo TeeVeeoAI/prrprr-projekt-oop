@@ -71,10 +71,12 @@ namespace prrprr_projekt_oop.Entities
         {
             keys = new Keys[]
             {
-                Keys.W, // Up
-                Keys.A, // Left
-                Keys.S, // Down
-                Keys.D // Right
+                Keys.W,  // Up
+                Keys.A,  // Left
+                Keys.S,  // Down
+                Keys.D,  // Right
+                Keys.Q   // WeaponSwitch
+
             };
 
             this.projectileTexture = projectileTexture;
@@ -84,10 +86,10 @@ namespace prrprr_projekt_oop.Entities
 
             levelMultipliers = new float[]
             {
-                1.1f, // Speed
-                0.9f, // FireRate
-                1.2f,  // Damage
-                1.15f // PullRadius
+                1.1f,   // Speed
+                0.9f,   // FireRate
+                1.2f,   // Damage
+                1.15f   // PullRadius
             };
         }
 
@@ -122,7 +124,7 @@ namespace prrprr_projekt_oop.Entities
 
             #endregion
 
-            #region Movement
+            #region Movement and Inputs
             // Reset velocity to zero and accumulate input directions
             Vector2 inputDirection = Vector2.Zero;
 
@@ -141,6 +143,10 @@ namespace prrprr_projekt_oop.Entities
             if (InputSystem.IsKeyDown(keys[(int)PlayerKeys.Right]))
             {
                 inputDirection.X += 1;
+            }
+            if (InputSystem.IsKeyPressed(keys[(int)PlayerKeys.WeaponSwitch]))
+            {
+                WeaponCycle();
             }
 
             // Normalize diagonal movement to prevent faster diagonal speed
@@ -171,7 +177,7 @@ namespace prrprr_projekt_oop.Entities
         }
 
         #region Weapon methods
-        public Projectile TryShoot(GameTime gameTime, Vector2 direction, Texture2D projTexture)
+        public List<Projectile> TryShoot(GameTime gameTime, Vector2 direction, Texture2D projTexture)
         {
             if (weapon == null) return null;
             Vector2 spawn = position + new Vector2(hitbox.Width / 2, hitbox.Height / 2);
@@ -182,12 +188,23 @@ namespace prrprr_projekt_oop.Entities
         {
             Vector2 mousePos = InputSystem.GetMousePosition();
             Vector2 direction = mousePos - (position + new Vector2(hitbox.Width / 2, hitbox.Height / 2));
-            Projectile projectile = TryShoot(gameTime, direction, projectileTexture);
-            if (projectile != null)
+            var spawned = TryShoot(gameTime, direction, projectileTexture);
+            if (spawned != null && spawned.Count > 0)
             {
-                projectiles.Add(projectile);
+                projectiles.AddRange(spawned);
             }
+        }
 
+        public void WeaponCycle()
+        {
+            if (weapon.GetType() == typeof(Rifle))
+            {
+                weapon = new Shotgun(weapon.FireRateSeconds * levelMultipliers[(int)PlayerUpgrades.FireRate], (int)(weapon.Damage * levelMultipliers[(int)PlayerUpgrades.Damage]));
+            }
+            else
+            {
+                weapon = new Rifle(weapon.FireRateSeconds * levelMultipliers[(int)PlayerUpgrades.FireRate], (int)(weapon.Damage * levelMultipliers[(int)PlayerUpgrades.Damage]));
+            }
         }
 
         #endregion
@@ -282,7 +299,8 @@ namespace prrprr_projekt_oop.Entities
         Up = 0,
         Left,
         Down,
-        Right
+        Right,
+        WeaponSwitch
     }
 
     public enum PlayerUpgrades
