@@ -20,7 +20,7 @@ namespace prrprr_projekt_oop.Entities.Weapons
         public float FireRateSeconds { get => fireRateSeconds; }
         public float ProjectileSpeed { get => projectileSpeed; }
 
-        protected Weapon(float fireRateSeconds = 0.25f, int damage = 1, Vector2? muzzleOffset = null, float projectileSpeed = 300f)
+        protected Weapon(float fireRateSeconds, int damage, Vector2? muzzleOffset = null, float projectileSpeed = 300f)
         {
             this.fireRateSeconds = fireRateSeconds;
             this.damage = damage;

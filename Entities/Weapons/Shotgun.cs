@@ -9,7 +9,7 @@ namespace prrprr_projekt_oop.Entities.Weapons
 {
     public class Shotgun : Weapon
     {
-        public Shotgun(float fireRateSeconds = 0.5f, int damage = 1) : base(fireRateSeconds, damage, Vector2.Zero, 400f)
+        public Shotgun(float fireRateSeconds = 0.5f, int damage = 1) : base(fireRateSeconds, damage, null, 500f)
         {
         }
 
